@@ -33,7 +33,7 @@ pres.defineSlideMaster({ title: "CONTENT", background: { color: HEX.paper },
 pres.defineSlideMaster({ title: "DARK", background: { color: HEX.night },
   objects: [
     { placeholder: { options: { name: "title", type: "title", x: M, y: 1.7, w: 9, h: 1.0, fontSize: 40, bold: true,
-                                color: HEX.nightText, valign: "middle", margin: 0 }, text: "" } },
+                                color: HEX.nightText, valign: "middle", align: "left", margin: 0 }, text: "" } },
   ] });
 
 let n = 0;
@@ -54,15 +54,15 @@ const text = (s, t, o) => s.addText(t, { isTextBox: true, margin: 0, fontSize: 1
 {
   const s = pres.addSlide({ masterName: "DARK" });
   s.addText("Driving a robot with one forearm", { placeholder: "title" });
-  text(s, "AWARE-AI Hackathon 2026 · Team [team name]", { x: M, y: 2.85, w: 9, h: 0.4, fontSize: 20, color: HEX.nightMuted });
-  text(s, "AJ · [teammate] · [teammate]", { x: M, y: 3.35, w: 9, h: 0.4, fontSize: 18, color: HEX.nightMuted });
-  s.addNotes("Hi, we're team [team name]. I'm AJ, and with me are [teammates]. In the next five minutes we'll show you how " +
+  text(s, "AWARE-AI Hackathon 2026", { x: M, y: 2.85, w: 9, h: 0.4, fontSize: 20, color: HEX.nightMuted });
+  text(s, "AJ · Jose · Kiran · Xinyi", { x: M, y: 3.35, w: 9, h: 0.4, fontSize: 18, color: HEX.nightMuted });
+  s.addNotes("(AJ) Hi, I'm AJ, and with me are Jose, Kiran and Xinyi. In the next five minutes we'll show you how " +
     "we drive the Jackal with one forearm and a Myo armband, what the muscle and motion signals taught us, and the " +
     "results from the sim. Here's the plan.");
 }
 
 // 2 · Agenda -------------------------------------------------------------------------------------
-const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibration and safety", "4 · What broke", "5 · Results"];
+const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibration, assistance, safety", "4 · What broke", "5 · Results"];
 {
   const s = content("Agenda", "Five parts, about a minute each",
     "Five parts. How a driver controls the robot. What the signals told us, which is why our design looks the way it " +
@@ -157,6 +157,39 @@ const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibra
     { x: M, y: 4.8, w: 8.8, h: 0.35, fontSize: 14, color: HEX.muted });
 }
 
+// 5b · A neural network against the simple model ---------------------------------------------------
+{
+  const g = D.tcn.gain.personal, x = D.tcn.nogain["cross-driver"];
+  const s = content(CH[1], "A neural network didn't beat the simple model on our data",
+    "(AJ) We also asked whether deep learning would read the muscles better. We trained a temporal convolutional " +
+    "network on the raw signal, with gain and noise augmentation, and tested it on takes and drivers it never saw. On " +
+    `each person's own two-and-a-half-minute calibration, the simple linear model still won: ${pct(g.lda.median)} of ` +
+    `poses against ${pct(g.tcn.median)}. On a driver it had never seen, both were near ${pct(x.lda.median)}, against ` +
+    "seventeen percent for guessing. With this little data per person, the simple model is the right choice, so the " +
+    "controller keeps it for the brake.");
+  const rows = [["Trained on your own calibration", g.tcn, g.lda], ["Tested on a new driver", x.tcn, x.lda]];
+  const x0 = 3.9, sc = 4.2;                         // 0 to 100 % across 4.2 in
+  rows.forEach(([label, t, l], i) => {
+    const y = 1.55 + i * 1.35;
+    text(s, label, { x: M, y, w: 3.4, h: 1.0, fontSize: 16, bold: true, valign: "middle" });
+    [["TCN", t, HEX.orange], ["LDA", l, HEX.blue]].forEach(([name, v, col], k) => {
+      const yy = y + 0.08 + k * 0.48;
+      s.addShape(pres.shapes.RECTANGLE, { x: x0, y: yy, w: v.median * sc, h: 0.36, fill: { color: col }, line: { color: col },
+                                          objectName: `tcn-bar-${i + 1}-${k + 1}` });
+      s.addShape(pres.shapes.LINE, { x: x0 + v.lo * sc, y: yy + 0.18, w: (v.hi - v.lo) * sc, h: 0,
+                                     line: { color: HEX.ink, width: 2 }, objectName: `tcn-range-${i + 1}-${k + 1}` });
+      text(s, `${name} ${pct(v.median)}`, { x: x0 + Math.max(v.hi, v.median) * sc + 0.1, y: yy - 0.04, w: 1.3, h: 0.44,
+                                            fontSize: 14, bold: k === 1, valign: "middle" });
+    });
+  });
+  s.addShape(pres.shapes.LINE, { x: x0 + 0.17 * sc, y: 1.5, w: 0, h: 2.6, line: { color: HEX.line, width: 1, dashType: "dash" },
+                                 objectName: "chance-line" });
+  text(s, "chance 17%", { x: x0 + 0.17 * sc - 0.5, y: 4.1, w: 1.0, h: 0.3, fontSize: 12, color: HEX.muted, align: "center" });
+  text(s, "TCN: neural network on the raw signal. LDA: linear model on 16 features. Share of 200 ms windows read as " +
+    "the right pose; bar: median of 4 drivers, line: lowest to highest. New driver: each scaled by their own calibration.",
+    { x: M, y: 4.45, w: 8.8, h: 0.7, fontSize: 13, color: HEX.muted });
+}
+
 // 6 · Calibration and safety ---------------------------------------------------------------------
 {
   const s = content(CH[2], "Ready in two minutes, and it stops when unsure",
@@ -187,32 +220,89 @@ const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibra
   });
 }
 
+// 6b · Four drivers, one command --------------------------------------------------------------------
+{
+  const r = D.team.brake_ratio;
+  const s = content(CH[2], "Four drivers calibrated with one command",
+    "(Kiran) To get past one driver, we made setup a single command. It connects the Myo, records your calibration, " +
+    "opens the sim and drives. Four of us recorded, and the data is public. The bars show how much stronger each " +
+    "person's fist is than their relaxed hand, which is what the brake detects. My first recording came out below one: " +
+    "the fist didn't register, so I recorded again. Now the tool shows that check after every calibration.");
+  box(s, M, 1.5, 9, 0.6, HEX.night, "command");
+  text(s, "python examples/lever.py <your name>", { x: M + 0.25, y: 1.5, w: 8.5, h: 0.6, fontSize: 20, bold: true,
+    color: HEX.nightText, fontFace: "Courier New", valign: "middle" });
+  const bars = [["AJ", r.aj], ["Jose", r.j], ["Xinyi", r.x], ["Kiran", r.k], ["Kiran, 1st try", r.k_first]];
+  const x0 = 2.6, sc = 6.0 / 10;                    // 0 to 10× across 6 in
+  bars.forEach(([who, v], i) => {
+    const y = 2.4 + i * 0.42;
+    text(s, who, { x: M, y, w: 2.0, h: 0.36, fontSize: 14, bold: true, valign: "middle" });
+    const col = v < 1 ? HEX.verm : HEX.green;
+    s.addShape(pres.shapes.RECTANGLE, { x: x0, y: y + 0.04, w: Math.max(v, 0.05) * sc, h: 0.28, fill: { color: col },
+                                        line: { color: col }, objectName: `fist-bar-${i + 1}` });
+    text(s, `${fmt(v, 1)}×`, { x: x0 + v * sc + 0.1, y, w: 0.8, h: 0.36, fontSize: 14, valign: "middle" });
+  });
+  text(s, "Fist ÷ relaxed muscle level (mean RMS over 8 channels). Below 1×, the fist didn't register.",
+    { x: M, y: 4.6, w: 8.8, h: 0.4, fontSize: 14, color: HEX.muted });
+}
+
+// 6c · Gate assist -------------------------------------------------------------------------------------
+{
+  const g = D.gate;
+  const s = content(CH[2], "The gate assist nudges you through, and never steers for you",
+    "(Xinyi) I added a gate assist. The lidar finds the two posts of the next gate. If you are already aimed within " +
+    "twenty degrees of it, it adds a small correction toward the centre, never more than 0.3 radians per second, so you " +
+    `stay in control. In ${g.approaches} test approaches from off the line, it got through the first gate ` +
+    `${g.passed_on} times against ${g.passed_off} without it, with no collisions either way. When the approach wasn't ` +
+    "aimed at the gate, it did nothing.");
+  const stats = [[`${g.passed_on} of ${g.approaches}`, "approaches through gate 1 with the assist"],
+                 [`${g.passed_off} of ${g.approaches}`, "without it"],
+                 [`${g.collisions}`, "collisions, either way"]];
+  stats.forEach(([big, small], i) => {
+    const x = M + i * 3.05;
+    box(s, x, 1.5, 2.85, 1.7, HEX.card, `gate-stat-${i + 1}`);
+    text(s, big, { x: x + 0.25, y: 1.62, w: 2.4, h: 0.8, fontSize: 36, bold: true });
+    text(s, small, { x: x + 0.25, y: 2.45, w: 2.4, h: 0.6, fontSize: 14, color: HEX.muted });
+  });
+  const rules = ["only when you're aimed within 20° of a gate", "adds at most 0.3 rad/s of turn",
+                 "never picks a gate for you", "off with --no-gate"];
+  rules.forEach((t, i) => {
+    const x = M + i * 2.3;
+    box(s, x, 3.5, 2.05, 0.75, "DDF2EA", `gate-rule-${i + 1}`);
+    text(s, t, { x: x + 0.12, y: 3.5, w: 1.85, h: 0.75, fontSize: 14, valign: "middle" });
+  });
+  text(s, `Scripted off-line approaches to L1's first gate in the sim, the same assist code as the controller.`,
+    { x: M, y: 4.6, w: 8.8, h: 0.4, fontSize: 14, color: HEX.muted });
+}
+
 // 7 · What broke ---------------------------------------------------------------------------------
 {
-  const s = content(CH[3], "Three things broke; each fix is now a safety rule",
-    `Three things broke. First, the brake fired on its own ${pct(D.brake.before)} of the time, because just holding ` +
+  const s = content(CH[3], "Four things broke; each fix is now a rule",
+    `(Jose) Four things broke. First, the brake fired on its own ${pct(D.brake.before)} of the time, because just holding ` +
     "your arm out uses the same forearm muscles. Now it needs a fist pattern held for 0.4 seconds, and it dropped to " +
     `zero. Second, right turns were weak: with the arm out you only roll about thirty degrees right, so we tune each ` +
     `side from the driver's own logs. Third, after a battery recharge the band went back on differently and the robot ` +
-    `reversed ${pct(D.band_moved.reverse)} of the time. Now it checks the pose at every start and refuses if the band moved.`);
+    `reversed ${pct(D.band_moved.reverse)} of the time. Now it checks the pose at every start and refuses if the band moved. ` +
+    "And today the Myo vanished: once unplugged it fell asleep and no laptop could find it. Wearing it and moving while " +
+    "the tool keeps scanning brought it back, and that's in our troubleshooting guide.");
   const rows = [
     ["Brake fired by itself", `${pct(D.brake.before)} of drive time`, "fist pattern held 0.4 s", `${pct(D.brake.after)}`],
     ["Right turns too weak", "full turn out of reach", "each side tuned from your own drives", "even turns"],
     ["Band moved after charging", `reversed ${pct(D.band_moved.reverse)} of a drive`, "pose checked at every start", "refuses to start"],
+    ["Myo vanished after unplugging", "no Myo found", "wear it, move, keep scanning", "connects"],
   ];
   text(s, "Problem", { x: M, y: 1.45, w: 2.6, h: 0.3, fontSize: 14, bold: true, color: HEX.muted });
   text(s, "Before", { x: 3.2, y: 1.45, w: 2.0, h: 0.3, fontSize: 14, bold: true, color: HEX.muted });
   text(s, "Fix", { x: 5.35, y: 1.45, w: 2.4, h: 0.3, fontSize: 14, bold: true, color: HEX.muted });
   text(s, "After", { x: 7.9, y: 1.45, w: 1.6, h: 0.3, fontSize: 14, bold: true, color: HEX.muted });
   rows.forEach(([p, before, fix, after], i) => {
-    const y = 1.8 + i * 1.05;
-    box(s, M, y, 9, 0.9, HEX.card, `broke-row-${i + 1}`);
-    text(s, p, { x: M + 0.15, y, w: 2.5, h: 0.9, fontSize: 16, bold: true, valign: "middle" });
-    box(s, 3.2, y + 0.15, 1.95, 0.6, "FDECE2", `before-${i + 1}`);
-    text(s, before, { x: 3.3, y: y + 0.15, w: 1.8, h: 0.6, fontSize: 14, valign: "middle" });
-    text(s, fix, { x: 5.35, y, w: 2.4, h: 0.9, fontSize: 14, valign: "middle" });
-    box(s, 7.9, y + 0.15, 1.45, 0.6, "DDF2EA", `after-${i + 1}`);
-    text(s, after, { x: 8.0, y: y + 0.15, w: 1.3, h: 0.6, fontSize: 14, bold: true, valign: "middle" });
+    const y = 1.8 + i * 0.82;
+    box(s, M, y, 9, 0.72, HEX.card, `broke-row-${i + 1}`);
+    text(s, p, { x: M + 0.15, y, w: 2.5, h: 0.72, fontSize: 15, bold: true, valign: "middle" });
+    box(s, 3.2, y + 0.1, 1.95, 0.52, "FDECE2", `before-${i + 1}`);
+    text(s, before, { x: 3.3, y: y + 0.1, w: 1.8, h: 0.52, fontSize: 14, valign: "middle" });
+    text(s, fix, { x: 5.35, y, w: 2.4, h: 0.72, fontSize: 14, valign: "middle" });
+    box(s, 7.9, y + 0.1, 1.45, 0.52, "DDF2EA", `after-${i + 1}`);
+    text(s, after, { x: 8.0, y: y + 0.1, w: 1.3, h: 0.52, fontSize: 14, bold: true, valign: "middle" });
   });
 }
 
@@ -272,10 +362,11 @@ const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibra
 // 10 · Limits and next ---------------------------------------------------------------------------
 {
   const s = content(CH[4], "What we'd test next",
-    "To be honest about limits: all of this is one driver, so the next step is our teammates recording and driving. " +
+    "(AJ) What we'd do next. Four drivers isn't enough for a neural network, so we'd pretrain on a public Myo dataset " +
+    "of thirty-six people, which has the relaxed hand and the fist the brake needs, then fine-tune on each calibration. " +
     "The lag result needs more sessions before we'd claim it helps. And we capped speed at one metre per second while " +
     "tuning, half what the sim allows, so going faster means the obstacle assist has to look further ahead first.");
-  const cards = [["One driver so far", "Teammates record (2 min) and drive, so the results cover more than one arm."],
+  const cards = [["More people", "Pretrain on a 36-person Myo dataset, fine-tune on each driver's 2-minute calibration."],
                  ["Lag gain unproven", "More blind sessions before we claim lag compensation helps."],
                  ["Top speed 1 m/s", "The sim allows 2 m/s: the assist must slow from further out first."]];
   cards.forEach(([t, d], i) => {
@@ -293,7 +384,7 @@ const CH = ["1 · How you drive", "2 · What the signals told us", "3 · Calibra
 {
   const s = pres.addSlide({ masterName: "DARK" });
   s.addText("Thank you", { placeholder: "title" });
-  text(s, "AJ · [teammate] · [teammate]", { x: M, y: 2.85, w: 9, h: 0.4, fontSize: 20, color: HEX.nightMuted });
+  text(s, "AJ · Jose · Kiran · Xinyi", { x: M, y: 2.85, w: 9, h: 0.4, fontSize: 20, color: HEX.nightMuted });
   text(s, "Code and dataset: github.com/ajbarea/Hackathon", { x: M, y: 3.35, w: 9, h: 0.4, fontSize: 18,
     color: HEX.nightMuted, hyperlink: { url: "https://github.com/ajbarea/Hackathon" } });
   s.addNotes("That's our controller: one forearm, no squeezing, every course finished. The code and the dataset are " +
