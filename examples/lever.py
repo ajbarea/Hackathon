@@ -203,7 +203,7 @@ def hang_up(*_) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("name", nargs="?", help="your name: your calibration is kept in data/<name>-lever")
-    ap.add_argument("--addr", default=TEAM_MYO, help="Myo address, or 'nearest' (default: our team's, %(default)s)")
+    ap.add_argument("--addr", default=TEAM_MYO, help="Myo address, 'nearest', or 'any' (first Myo to answer, no scan) (default: our team's, %(default)s)")
     ap.add_argument("--recalibrate", action="store_true", help="calibrate again before driving")
     args = ap.parse_args()
     if args.name is None:
