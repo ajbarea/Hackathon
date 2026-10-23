@@ -194,7 +194,8 @@ class LDA:
     """Linear discriminant analysis with a shrunk pooled covariance (few windows, 16 features)."""
 
     def fit(self, X: np.ndarray, y: list[str], shrink: float = 0.1) -> "LDA":
-        self.classes = [g for g in GESTURES if g in set(y)]
+        known = [g for g in GESTURES if g in set(y)]
+        self.classes = known + sorted(set(y) - set(known))      # any other labels (e.g. lever poses) after
         y = np.asarray(y)
         self.means = np.array([X[y == g].mean(axis=0) for g in self.classes])
         resid = X - self.means[[self.classes.index(g) for g in y]]

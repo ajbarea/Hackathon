@@ -1,0 +1,598 @@
+{
+  "val_macro_f1": 0.7058286394481327,
+  "best_epoch": 40,
+  "norm": "driver",
+  "augment": {
+    "gain": [
+      1.0,
+      1.0
+    ],
+    "noise": 0.05
+  },
+  "drivers": {
+    "aj": [
+      "data/AJ-myo-lever-dataset/session1",
+      "data/AJ-myo-lever-dataset/session2"
+    ],
+    "j": [
+      "data/team-myo-lever-dataset-2026-10-23/j-lever"
+    ],
+    "k": [
+      "data/team-myo-lever-dataset-2026-10-23/k-lever"
+    ],
+    "x": [
+      "data/team-myo-lever-dataset-2026-10-23/x-lever"
+    ]
+  },
+  "results": {
+    "cross-global": [
+      {
+        "driver": "aj",
+        "test_windows": 1539,
+        "tcn": [
+          {
+            "brake_false_fire": 0.2182385035074045,
+            "brake_miss": 0.0,
+            "accuracy": 0.46718648473034435,
+            "macro_f1": 0.3944252662511814,
+            "val_macro_f1": 0.5123895220790625,
+            "best_epoch": 28,
+            "seed": 0,
+            "secs": 17.7
+          },
+          {
+            "brake_false_fire": 0.17848791893998442,
+            "brake_miss": 0.0,
+            "accuracy": 0.50227420402859,
+            "macro_f1": 0.438424531041584,
+            "val_macro_f1": 0.5156675982942339,
+            "best_epoch": 31,
+            "seed": 1,
+            "secs": 21.7
+          },
+          {
+            "brake_false_fire": 0.151987529228371,
+            "brake_miss": 0.0,
+            "accuracy": 0.5016244314489928,
+            "macro_f1": 0.4326280385760801,
+            "val_macro_f1": 0.5398304697004466,
+            "best_epoch": 37,
+            "seed": 2,
+            "secs": 19.3
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.004676539360872954,
+          "brake_miss": 0.0,
+          "accuracy": 0.3222871994801819,
+          "macro_f1": 0.25530991363664296
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.018706157443491817,
+          "brake_miss": 0.0
+        }
+      },
+      {
+        "driver": "j",
+        "test_windows": 776,
+        "tcn": [
+          {
+            "brake_false_fire": 0.24574961360123648,
+            "brake_miss": 0.16279069767441856,
+            "accuracy": 0.16752577319587628,
+            "macro_f1": 0.12647627149984406,
+            "val_macro_f1": 0.7531456440002913,
+            "best_epoch": 33,
+            "seed": 0,
+            "secs": 23.2
+          },
+          {
+            "brake_false_fire": 0.2596599690880989,
+            "brake_miss": 0.0852713178294574,
+            "accuracy": 0.16881443298969073,
+            "macro_f1": 0.11455814587219053,
+            "val_macro_f1": 0.7722201482606742,
+            "best_epoch": 39,
+            "seed": 1,
+            "secs": 23.8
+          },
+          {
+            "brake_false_fire": 0.32921174652241114,
+            "brake_miss": 0.046511627906976716,
+            "accuracy": 0.19974226804123713,
+            "macro_f1": 0.13306385747114016,
+            "val_macro_f1": 0.7525178244463326,
+            "best_epoch": 35,
+            "seed": 2,
+            "secs": 26.7
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.2132921174652241,
+          "brake_miss": 0.13178294573643412,
+          "accuracy": 0.20231958762886598,
+          "macro_f1": 0.16717313391895025
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.22565687789799072,
+          "brake_miss": 0.10852713178294571
+        }
+      },
+      {
+        "driver": "k",
+        "test_windows": 675,
+        "tcn": [
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 1.0,
+            "accuracy": 0.26222222222222225,
+            "macro_f1": 0.20393821248030122,
+            "val_macro_f1": 0.6570493368663957,
+            "best_epoch": 37,
+            "seed": 0,
+            "secs": 24.8
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 1.0,
+            "accuracy": 0.22518518518518518,
+            "macro_f1": 0.19651115157223362,
+            "val_macro_f1": 0.7144957723663321,
+            "best_epoch": 30,
+            "seed": 1,
+            "secs": 24.0
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 1.0,
+            "accuracy": 0.26222222222222225,
+            "macro_f1": 0.17914260351556768,
+            "val_macro_f1": 0.7686612299746397,
+            "best_epoch": 40,
+            "seed": 2,
+            "secs": 26.5
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 1.0,
+          "accuracy": 0.18814814814814815,
+          "macro_f1": 0.14325104175161846
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 1.0
+        }
+      },
+      {
+        "driver": "x",
+        "test_windows": 669,
+        "tcn": [
+          {
+            "brake_false_fire": 0.040998217468805706,
+            "brake_miss": 0.9259259259259259,
+            "accuracy": 0.3333333333333333,
+            "macro_f1": 0.3194747865306672,
+            "val_macro_f1": 0.6124427135829851,
+            "best_epoch": 40,
+            "seed": 0,
+            "secs": 25.3
+          },
+          {
+            "brake_false_fire": 0.08377896613190731,
+            "brake_miss": 0.8703703703703703,
+            "accuracy": 0.21524663677130046,
+            "macro_f1": 0.23597985442635136,
+            "val_macro_f1": 0.6079169042520679,
+            "best_epoch": 39,
+            "seed": 1,
+            "secs": 25.3
+          },
+          {
+            "brake_false_fire": 0.11942959001782531,
+            "brake_miss": 0.7777777777777778,
+            "accuracy": 0.21674140508221226,
+            "macro_f1": 0.23701389485393165,
+            "val_macro_f1": 0.6712457676938673,
+            "best_epoch": 40,
+            "seed": 2,
+            "secs": 26.5
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.12037037037037035,
+          "accuracy": 0.28101644245142005,
+          "macro_f1": 0.21616633685599204
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      }
+    ],
+    "cross-driver": [
+      {
+        "driver": "aj",
+        "test_windows": 1539,
+        "tcn": [
+          {
+            "brake_false_fire": 0.003117692907248636,
+            "brake_miss": 0.12109375,
+            "accuracy": 0.34827810266406756,
+            "macro_f1": 0.2749830095630738,
+            "val_macro_f1": 0.5435103349733603,
+            "best_epoch": 40,
+            "seed": 0,
+            "secs": 18.0
+          },
+          {
+            "brake_false_fire": 0.012470771628994544,
+            "brake_miss": 0.0859375,
+            "accuracy": 0.3469785575048733,
+            "macro_f1": 0.2653217138946773,
+            "val_macro_f1": 0.579513094390467,
+            "best_epoch": 40,
+            "seed": 1,
+            "secs": 18.1
+          },
+          {
+            "brake_false_fire": 0.006235385814497272,
+            "brake_miss": 0.0703125,
+            "accuracy": 0.3853151397011046,
+            "macro_f1": 0.32443999771222987,
+            "val_macro_f1": 0.5502317455153108,
+            "best_epoch": 31,
+            "seed": 2,
+            "secs": 17.2
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.26953125,
+          "accuracy": 0.33073424301494475,
+          "macro_f1": 0.25370965016405983
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.003897116134060795,
+          "brake_miss": 0.25
+        }
+      },
+      {
+        "driver": "j",
+        "test_windows": 776,
+        "tcn": [
+          {
+            "brake_false_fire": 0.027820710973724884,
+            "brake_miss": 0.015503875968992276,
+            "accuracy": 0.37628865979381443,
+            "macro_f1": 0.32053377812600714,
+            "val_macro_f1": 0.7230593476153926,
+            "best_epoch": 40,
+            "seed": 0,
+            "secs": 23.0
+          },
+          {
+            "brake_false_fire": 0.03863987635239567,
+            "brake_miss": 0.06201550387596899,
+            "accuracy": 0.36082474226804123,
+            "macro_f1": 0.31113357439375106,
+            "val_macro_f1": 0.6986732492720998,
+            "best_epoch": 29,
+            "seed": 1,
+            "secs": 24.5
+          },
+          {
+            "brake_false_fire": 0.012364760432766615,
+            "brake_miss": 0.023255813953488413,
+            "accuracy": 0.4368556701030928,
+            "macro_f1": 0.4008255004609083,
+            "val_macro_f1": 0.6738736492085798,
+            "best_epoch": 39,
+            "seed": 2,
+            "secs": 28.2
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.012364760432766615,
+          "brake_miss": 0.1937984496124031,
+          "accuracy": 0.3389175257731959,
+          "macro_f1": 0.28627096039720734
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.04327666151468315,
+          "brake_miss": 0.17829457364341084
+        }
+      },
+      {
+        "driver": "k",
+        "test_windows": 675,
+        "tcn": [
+          {
+            "brake_false_fire": 0.35159010600706714,
+            "brake_miss": 0.0,
+            "accuracy": 0.22814814814814816,
+            "macro_f1": 0.14825731207209616,
+            "val_macro_f1": 0.7160220456642601,
+            "best_epoch": 38,
+            "seed": 0,
+            "secs": 24.0
+          },
+          {
+            "brake_false_fire": 0.04240282685512368,
+            "brake_miss": 0.07339449541284404,
+            "accuracy": 0.30962962962962964,
+            "macro_f1": 0.20092694181442203,
+            "val_macro_f1": 0.7024287714347767,
+            "best_epoch": 40,
+            "seed": 1,
+            "secs": 27.3
+          },
+          {
+            "brake_false_fire": 0.3992932862190813,
+            "brake_miss": 0.0,
+            "accuracy": 0.22074074074074074,
+            "macro_f1": 0.11508203964563067,
+            "val_macro_f1": 0.738934186511056,
+            "best_epoch": 38,
+            "seed": 2,
+            "secs": 24.7
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.06713780918727916,
+          "brake_miss": 0.1651376146788991,
+          "accuracy": 0.29333333333333333,
+          "macro_f1": 0.18108506560518944
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.1625441696113074,
+          "brake_miss": 0.07339449541284404
+        }
+      },
+      {
+        "driver": "x",
+        "test_windows": 669,
+        "tcn": [
+          {
+            "brake_false_fire": 0.012477718360071301,
+            "brake_miss": 0.0,
+            "accuracy": 0.32585949177877427,
+            "macro_f1": 0.22781913517035923,
+            "val_macro_f1": 0.7287638504178751,
+            "best_epoch": 39,
+            "seed": 0,
+            "secs": 24.9
+          },
+          {
+            "brake_false_fire": 0.035650623885918005,
+            "brake_miss": 0.0,
+            "accuracy": 0.30493273542600896,
+            "macro_f1": 0.2241890706250603,
+            "val_macro_f1": 0.7229011753519684,
+            "best_epoch": 38,
+            "seed": 1,
+            "secs": 25.2
+          },
+          {
+            "brake_false_fire": 0.06417112299465241,
+            "brake_miss": 0.0,
+            "accuracy": 0.2615844544095665,
+            "macro_f1": 0.19994809126035076,
+            "val_macro_f1": 0.7307374106185076,
+            "best_epoch": 33,
+            "seed": 2,
+            "secs": 24.8
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.01851851851851849,
+          "accuracy": 0.30493273542600896,
+          "macro_f1": 0.2764186216722439
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      }
+    ],
+    "personal": [
+      {
+        "driver": "aj",
+        "test_windows": 435,
+        "tcn": [
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.6758620689655173,
+            "macro_f1": 0.6838733565938814,
+            "val_macro_f1": 0.5931190003310162,
+            "best_epoch": 38,
+            "seed": 0,
+            "secs": 10.8
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.8689655172413793,
+            "macro_f1": 0.8685472556928797,
+            "val_macro_f1": 0.6161387753405135,
+            "best_epoch": 36,
+            "seed": 1,
+            "secs": 10.2
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.8275862068965517,
+            "macro_f1": 0.8223906075163522,
+            "val_macro_f1": 0.6263553885365892,
+            "best_epoch": 37,
+            "seed": 2,
+            "secs": 10.3
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0,
+          "accuracy": 0.8827586206896552,
+          "macro_f1": 0.8797643677161749
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      },
+      {
+        "driver": "j",
+        "test_windows": 222,
+        "tcn": [
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.2777777777777778,
+            "accuracy": 0.3738738738738739,
+            "macro_f1": 0.3194232311380019,
+            "val_macro_f1": 0.6024705581157194,
+            "best_epoch": 26,
+            "seed": 0,
+            "secs": 5.1
+          },
+          {
+            "brake_false_fire": 0.010752688172043012,
+            "brake_miss": 0.0,
+            "accuracy": 0.3963963963963964,
+            "macro_f1": 0.32827929555571833,
+            "val_macro_f1": 0.6231611162983712,
+            "best_epoch": 18,
+            "seed": 1,
+            "secs": 5.3
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.3055555555555556,
+            "accuracy": 0.3738738738738739,
+            "macro_f1": 0.32982768653297967,
+            "val_macro_f1": 0.6044563279857398,
+            "best_epoch": 30,
+            "seed": 2,
+            "secs": 5.2
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0,
+          "accuracy": 0.7612612612612613,
+          "macro_f1": 0.7032814038857552
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      },
+      {
+        "driver": "k",
+        "test_windows": 187,
+        "tcn": [
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.7005347593582888,
+            "macro_f1": 0.7210810755724971,
+            "val_macro_f1": 0.5439153439153439,
+            "best_epoch": 37,
+            "seed": 0,
+            "secs": 4.8
+          },
+          {
+            "brake_false_fire": 0.024390243902439025,
+            "brake_miss": 0.0,
+            "accuracy": 0.5080213903743316,
+            "macro_f1": 0.5333253210478078,
+            "val_macro_f1": 0.432224025974026,
+            "best_epoch": 37,
+            "seed": 1,
+            "secs": 4.7
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.5668449197860963,
+            "macro_f1": 0.5975267389290461,
+            "val_macro_f1": 0.43562694459222007,
+            "best_epoch": 35,
+            "seed": 2,
+            "secs": 4.7
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0,
+          "accuracy": 0.8556149732620321,
+          "macro_f1": 0.8611530274042737
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      },
+      {
+        "driver": "x",
+        "test_windows": 184,
+        "tcn": [
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.7282608695652174,
+            "macro_f1": 0.7118873525994269,
+            "val_macro_f1": 0.5362371927589319,
+            "best_epoch": 20,
+            "seed": 0,
+            "secs": 7.1
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.6304347826086957,
+            "macro_f1": 0.6330524363045401,
+            "val_macro_f1": 0.5516528962628494,
+            "best_epoch": 8,
+            "seed": 1,
+            "secs": 7.0
+          },
+          {
+            "brake_false_fire": 0.0,
+            "brake_miss": 0.0,
+            "accuracy": 0.657608695652174,
+            "macro_f1": 0.6160029753140327,
+            "val_macro_f1": 0.5686111111111111,
+            "best_epoch": 20,
+            "seed": 2,
+            "secs": 6.8
+          }
+        ],
+        "lda": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0,
+          "accuracy": 0.8532608695652174,
+          "macro_f1": 0.8550361698325948
+        },
+        "lda_brake": {
+          "brake_false_fire": 0.0,
+          "brake_miss": 0.0
+        }
+      }
+    ]
+  },
+  "config": {
+    "hidden": 32,
+    "kernel": 5,
+    "dilations": [
+      1,
+      2,
+      4
+    ],
+    "dropout": 0.1
+  },
+  "torch": "2.2.2"
+}
