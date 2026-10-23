@@ -1,0 +1,39 @@
+{
+  "val_macro_f1": 0.6935657994031194,
+  "best_epoch": 33,
+  "norm": "global",
+  "augment": {
+    "gain": [
+      0.6,
+      1.6
+    ],
+    "noise": 0.05
+  },
+  "drivers": {
+    "aj": [
+      "data/AJ-myo-lever-dataset/session1",
+      "data/AJ-myo-lever-dataset/session2"
+    ],
+    "j": [
+      "data/team-myo-lever-dataset-2026-10-23/j-lever"
+    ],
+    "k": [
+      "data/team-myo-lever-dataset-2026-10-23/k-lever"
+    ],
+    "x": [
+      "data/team-myo-lever-dataset-2026-10-23/x-lever"
+    ]
+  },
+  "results": {},
+  "config": {
+    "hidden": 32,
+    "kernel": 5,
+    "dilations": [
+      1,
+      2,
+      4
+    ],
+    "dropout": 0.1
+  },
+  "torch": "2.2.2"
+}

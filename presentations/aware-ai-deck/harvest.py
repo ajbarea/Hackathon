@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-WT = Path("/Users/ajbarea/ajsoftworks/Hackathon/.claude/worktrees/gestures/examples")
+WT = Path(__file__).resolve().parents[2] / "examples"
 DATA = Path("/Users/ajbarea/ajsoftworks/Hackathon/data")
 DS = DATA / "AJ-myo-lever-dataset"
 sys.path.insert(0, str(WT))
@@ -67,6 +67,43 @@ out["band_moved"] = {"reverse": share(moved, "reverse"),
 durs = [2, 3, 5]
 out["record"] = {"poses": len(M.LEVER_STEPS), "durations": durs,
                  "seconds": len(M.LEVER_STEPS) * (len(durs) * 3 + sum(durs))}
+
+# --- 2026-10-23: the gate assist, the team's recordings, and the TCN against the LDA ---------
+gate = json.load(open(Path(__file__).with_name("gate-trial.json")))["trials"]
+out["gate"] = {"approaches": len(gate), "passed_on": sum(t["gate_on"]["passed"] for t in gate),
+               "passed_off": sum(t["gate_off"]["passed"] for t in gate),
+               "collisions": sum(t["gate_on"]["collisions"] + t["gate_off"]["collisions"] for t in gate),
+               "never_aimed": sum(t["gate_on"]["gate_ticks"] == 0 for t in gate)}
+
+TEAM = DATA / "team-myo-lever-dataset-2026-10-23"
+
+
+def brake_ratio(*folders):
+    found = [f for d in folders for f in G.load_recordings(d, "Myo_EMG", ("rest", "forward"), 8)[0]]
+    rms = {lab: np.mean([np.sqrt((x ** 2).mean(0)) for lab2, x, *_ in found if lab2 == lab], axis=0)
+           for lab in ("rest", "forward")}
+    return round(float(rms["forward"].mean() / rms["rest"].mean()), 1)
+
+
+out["team"] = {"drivers": 4, "brake_ratio": {"aj": brake_ratio(DS / "session1", DS / "session2"),
+                                            "j": brake_ratio(TEAM / "j-lever"), "k": brake_ratio(TEAM / "k-lever"),
+                                            "x": brake_ratio(TEAM / "x-lever"),
+                                            "k_first": brake_ratio(TEAM / "k-lever-first")}}
+
+
+def tcn_summary(path):
+    """Per setup: median and range across drivers of each driver's median over seeds (train_tcn.report)."""
+    res = json.load(open(WT / "models" / path))["results"]
+    def agg(vals):
+        return {"median": round(float(np.median(vals)), 2), "lo": round(min(vals), 2), "hi": round(max(vals), 2)}
+    return {mode: {"tcn": agg([float(np.median([r["accuracy"] for r in f["tcn"]])) for f in folds]),
+                   "lda": agg([f["lda"]["accuracy"] for f in folds]),
+                   "tcn_brake_ff": agg([float(np.median([r["brake_false_fire"] for r in f["tcn"]])) for f in folds]),
+                   "lda_brake_ff": agg([f["lda_brake"]["brake_false_fire"] for f in folds])}
+            for mode, folds in res.items()}
+
+
+out["tcn"] = {"gain": tcn_summary("emg_tcn_eval.json"), "nogain": tcn_summary("emg_tcn_eval_nogain.json")}
 
 json.dump(out, open(Path(__file__).with_name("deck-data.json"), "w"), indent=1)
 print(json.dumps({k: v for k, v in out.items()}, indent=1)[:3000])

@@ -29,9 +29,7 @@ GESTURES = HERE / "myo_gestures.py"
 TRAIN = HERE / "train_pooled.py"
 BRAKE_MODEL = DATA / "brake-pooled.npz"   # fist detector trained on everyone (m to rebuild); your own takes if absent
 PUBLISHER = HERE / "myo_lsl_publisher.py"
-TEAM_MYO = "any"                        # first Myo in range, by service UUID: on this Mac BLE scans see no Myo
-                                        # and connecting by MAC times out (myo_check.py step 3 is what works).
-                                        # Our band: EC:26:ED:BC:F1:E4 (--addr <MAC> if two Myos are in range)
+TEAM_MYO = "EE:B9:D8:83:AD:5B"          # our armband; another team's Myo is often in range
 WS_PORTS = (8765, *range(8790, 8800))   # the bridge's default first (something else may hold it)
 UDP_PORTS = (9870, *range(9871, 9880))
 COMPLETE = "calibration-complete"       # written once `record` has finished every take
@@ -208,7 +206,7 @@ def hang_up(*_) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("name", nargs="?", help="your name: your calibration is kept in data/<name>-lever")
-    ap.add_argument("--addr", default=TEAM_MYO, help="Myo address, or 'nearest' (default: our team's, %(default)s)")
+    ap.add_argument("--addr", default=TEAM_MYO, help="Myo address, 'nearest', or 'any' (first Myo to answer, no scan) (default: our team's, %(default)s)")
     ap.add_argument("--recalibrate", action="store_true", help="calibrate again before driving")
     args = ap.parse_args()
     if args.name is None:

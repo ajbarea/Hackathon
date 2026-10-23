@@ -1,0 +1,9 @@
+{"run": "2026-10-23, gate_trial.py against the live sim (L1-gates, headless Chrome + jackal-bridge), PR #7's assist()",
+ "trials": [
+  {"turn_w": 0.25, "turn_s": 1.0, "gate_on": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 0.51, "secs": 14.0}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 0.49, "secs": 14.0}},
+  {"turn_w": -0.25, "turn_s": 1.0, "gate_on": {"passed": 1, "collisions": 0, "gate_ticks": 53, "y_end": -0.24, "secs": 5.4}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": -0.68, "secs": 14.0}},
+  {"turn_w": 0.35, "turn_s": 1.2, "gate_on": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 2.95, "secs": 9.6}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 2.82, "secs": 9.0}},
+  {"turn_w": -0.35, "turn_s": 1.2, "gate_on": {"passed": 1, "collisions": 0, "gate_ticks": 56, "y_end": -0.14, "secs": 5.5}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": -1.65, "secs": 7.4}},
+  {"turn_w": 0.4, "turn_s": 1.5, "gate_on": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 2.5, "secs": 8.2}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": 2.45, "secs": 8.1}},
+  {"turn_w": -0.4, "turn_s": 1.5, "gate_on": {"passed": 0, "collisions": 0, "gate_ticks": 38, "y_end": -0.52, "secs": 14.0}, "gate_off": {"passed": 0, "collisions": 0, "gate_ticks": 0, "y_end": -2.45, "secs": 8.1}}
+ ]}

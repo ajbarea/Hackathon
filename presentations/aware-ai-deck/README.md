@@ -8,4 +8,4 @@ the speaker notes. The paths at the top of both point at AJ's checkout; change t
 python harvest.py && npm install && node build.js
 ```
 
-The finished deck is the `AWARE-AI-Hackathon-Deck.pptx` asset on the `dataset-2026-10-22` release.
+The finished deck is the `AWARE-AI-Hackathon-Deck.pptx` asset on the `dataset-2026-10-23` release. Build with `NODE_PATH=$PWD/node_modules` so the theme step finds pptxgenjs. `gate_trial.py` produced `gate-trial.json` (needs the bridge and the sim page open).

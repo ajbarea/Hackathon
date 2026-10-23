@@ -50,9 +50,9 @@ LEVER_STOP = 0.6      # ... arm raised past this fraction of arm_up: stopped
 LEVER_FULL = 0.15     # raised less than this fraction (about level): full speed
 ENVELOPE = 1.5       # roll or tip beyond this × your calibrated range (or tipped up as far as
                      # tip_down) means the arm left the driving pose: stop
-V_MAX = 1.4          # m/s at a full squeeze / arm level (protocol limit 2.0; L3 caps it to 1.0 anyway)
+V_MAX = 1.0          # m/s at a full squeeze (--vmax 1.4 --wmax 2.2 is the faster pair)
 V_REVERSE = 0.4
-W_MAX = 2.2          # rad/s at full roll: scaled with V_MAX so a full roll keeps the same turning radius (~0.64 m)
+W_MAX = 1.6          # rad/s at full roll: scaled with V_MAX so a full roll keeps the same turning radius (~0.63 m)
 GRAVITY_TAU_S = 0.1  # smoothing of the accelerometer (arm movement adds non-gravity acceleration)
 
 ROBOT_HALF_LENGTH = 0.255  # chassis box in models/jackal/jackal.xml
