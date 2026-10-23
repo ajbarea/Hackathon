@@ -50,6 +50,21 @@ def test_an_interrupted_calibration_is_skipped(tmp_path):
     assert L.fresh(tmp_path, "ben") == tmp_path / "ben-lever-3"
 
 
+def test_only_numbered_folders_left_still_numbers_upward(tmp_path):
+    touch(tmp_path / "ben-lever-3")
+    assert L.fresh(tmp_path, "ben") == tmp_path / "ben-lever-4"
+
+
+def test_a_folder_recorded_by_hand_counts_once_every_round_is_there(tmp_path):
+    folder = tmp_path / "ben-lever"
+    folder.mkdir()
+    for n, pose in enumerate(L.IMU_POSES * L.ROUNDS):
+        (folder / f"{pose}_20261023_120000_2s_{n}_Myo_IMU.csv").write_text("")
+        if n == len(L.IMU_POSES) * L.ROUNDS - 2:
+            assert not L.calibrated(folder)              # stopped one take short
+    assert L.calibrated(folder)
+
+
 def test_other_names_do_not_count(tmp_path):
     touch(tmp_path / "benny-lever")
     touch(tmp_path / "ben-lever-v2")

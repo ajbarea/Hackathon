@@ -30,6 +30,8 @@ TEAM_MYO = "EE:B9:D8:83:AD:5B"          # our armband; another team's Myo is oft
 WS_PORTS = (8765, *range(8790, 8800))   # the bridge's default first (something else may hold it)
 UDP_PORTS = (9870, *range(9871, 9880))
 COMPLETE = "calibration-complete"       # written once `record` has finished every take
+IMU_POSES = ("neutral", "arm_up", "roll_left", "roll_right", "tip_down", "brake")  # what `record` writes
+ROUNDS = 3                              # `record` takes each pose at 2, 3 and 5 s
 PUBLISHER_SAYS = ("✓ Streaming", "✗", "! Myo disconnected", "Connecting", "Nearest", "No Myo")  # not the sync hints
 BRIDGE_SAYS = ("jackal-bridge:", "sim page:")
 QUIET = {**os.environ, "PYTHONWARNINGS": "ignore::DeprecationWarning"}
@@ -55,8 +57,10 @@ def folders(data: Path, name: str) -> list[Path]:
 
 
 def calibrated(folder: Path) -> bool:
-    """`record` finished here (an interrupted one leaves no marker, and is never driven from)."""
-    return (folder / COMPLETE).exists()
+    """`record` finished here: lever.py marks it, and a folder recorded by hand has every round of every pose
+    (an interrupted `record` has neither, and is never driven from)."""
+    return (folder / COMPLETE).exists() or all(len(list(folder.glob(f"{pose}_*_Myo_IMU.csv"))) >= ROUNDS
+                                               for pose in IMU_POSES)
 
 
 def current(data: Path, name: str) -> Path | None:
@@ -67,9 +71,10 @@ def current(data: Path, name: str) -> Path | None:
 
 def fresh(data: Path, name: str) -> Path:
     """A new, unused calibration folder."""
-    if not (data / f"{name}-lever").exists():
+    have = folders(data, name)
+    if not have and not (data / f"{name}-lever").exists():
         return data / f"{name}-lever"
-    n = max(int(p.name.rsplit("-", 1)[1]) if p.name[-1].isdigit() else 1 for p in folders(data, name)) + 1
+    n = max([1] + [int(p.name.rsplit("-", 1)[1]) for p in have if p.name != f"{name}-lever"]) + 1
     while (data / f"{name}-lever-{n}").exists():
         n += 1
     return data / f"{name}-lever-{n}"
