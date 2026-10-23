@@ -1,9 +1,10 @@
-<!-- budget: 760 words -->
+<!-- budget: 790 words -->
 # Myo lever controller
 
 Drive the Jackal with your forearm. The Myo armband's motion sensor reads your arm's angle, and a firm
-fist brakes. Relaxing your hand never moves the robot. A lidar assist slows before obstacles, and lag
-compensation switches on by itself when the link is slow.
+fist brakes. Relaxing your hand never moves the robot. A lidar assist slows before obstacles and, when
+you are already aimed within 20° of a gate, steers you toward its centre by at most 0.3 rad/s
+(`--no-gate` switches that part off). Lag compensation switches on by itself when the link is slow.
 
 ## Drive in one command
 
@@ -45,7 +46,7 @@ or when the drive says the band has moved. Using a different armband: add `--add
 | `CondaError: Run 'conda init'` | Run `conda init zsh` once (or `conda init bash`), then open a new terminal |
 | `No Myo found`, or stuck connecting | Plug the Myo into USB for a few seconds to wake it, unplug it, and move it. Close Myo Connect |
 | Found once, then gone | It fell asleep: unplug it, put it on and keep moving while it connects |
-| Still not found | Another laptop may be connected to it: stop `lever.py` there. Then run `python examples/myo_check.py` |
+| Still not found | Another laptop may be connected to it: stop `lever.py` there. Then run `python examples/myo_check.py`. If its step 3 connects but scans find nothing, add `--addr any` |
 
 ## Tuning
 
