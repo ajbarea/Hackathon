@@ -36,3 +36,7 @@ data/
 
 # Claude Code worktrees
 .claude/worktrees/
+
+# Docs site build
+site/
+.cache/

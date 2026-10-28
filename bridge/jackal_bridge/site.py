@@ -31,7 +31,7 @@ from websockets.http11 import Request, Response
 log = logging.getLogger("jackal_bridge")
 
 PREFIX = "/Hackathon/"  # the GitHub Pages project path; the build uses the same base
-SITE_ZIP_URL = "https://ahrtlab.github.io/Hackathon/site.zip"  # built by .github/workflows/pages.yml
+SITE_ZIP_URL = "https://ahrtlab.github.io/Hackathon/site.zip"  # built by AHRTLab/Hackathon's pages.yml
 REPO_DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
 CACHE_DIR = Path(os.environ.get("JACKAL_SITE_CACHE") or Path.home() / ".cache" / "jackal-bridge" / "site")
 

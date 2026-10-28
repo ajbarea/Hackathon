@@ -1,81 +1,70 @@
-# Build the Jackal sim (web/) and publish it to GitHub Pages on every push to main.
+# Build the docs site (Zensical) with the team deck at /deck/ and the Jackal sim (web/) at /sim/, and
+# publish it to GitHub Pages on every push to main. Pull requests run the same build without publishing.
 # One-time repo setting: Settings → Pages → Build and deployment → Source: "GitHub Actions".
-# After a successful deploy, the exact published files are also committed to the gh-pages branch, so
-# that branch always shows what is live and its history is a log of deploys (it is not what Pages serves).
-name: Deploy sim to GitHub Pages
+name: Deploy site to GitHub Pages
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'deploy' }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: web/package-lock.json
-      - run: npm ci
-      - name: Unit tests (contract fixtures, command rules, physics, courses completable)
-        run: npm test
-      - name: Build (base path = /<repo name>/)
+      - name: Sim unit tests (contract fixtures, command rules, physics, courses completable)
+        working-directory: web
+        run: npm ci && npm test
+      - name: Build the sim (base path = /<repo name>/sim/)
+        working-directory: web
         run: npm run build
         env:
-          SITE_BASE: /${{ github.event.repository.name }}/
-      - name: Bundle site.zip (downloaded by `jackal-bridge --serve-site` for offline / Safari use)
-        run: cd dist && zip -qr ../site.zip . && mv ../site.zip .
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          SITE_BASE: /${{ github.event.repository.name }}/sim/
+
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
-          path: web/dist
+          enable-cache: true
+      - name: Docs nav test
+        run: uv run --frozen pytest -q tests
+      - name: Build the docs site
+        run: uv run --frozen zensical build --clean
+      - name: Put the sim under /sim/
+        run: cp -r web/dist site/sim
+
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: github.event_name != 'pull_request'
+        with:
+          path: site
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
-
-  record:
-    needs: deploy
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write   # push to gh-pages
-      actions: read     # download this run's site artifact
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-      - uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: ${{ runner.temp }}/site
-      - name: Commit the deployed files to gh-pages
-        run: |
-          git rm -rq --ignore-unmatch .
-          tar -xf "${{ runner.temp }}/site/artifact.tar" -C .
-          touch .nojekyll
-          git add -A
-          if git diff --cached --quiet; then echo "gh-pages already matches this deploy"; exit 0; fi
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit -qm "Deploy ${GITHUB_SHA::7} (main), base /${{ github.event.repository.name }}/"
-          git push origin gh-pages
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Deck · Myo Lever Controller</title>
+<meta name="description" content="The team's Best Presentation deck from the AWARE-AI Fall Hackathon 2026, with what we said on each slide.">
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #17202b; --muted: #4a5563; --line: #d7dce3;
+  --accent: #0063a3; --focus: #d55e00;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e141b; --card: #17202b; --text: #e8edf3; --muted: #a9b4c2; --line: #2b3746; --accent: #6cb6e8; --focus: #f0a35e; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header, main, footer { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 28px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.95rem; }
+a { color: var(--accent); }
+a:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.2; margin: 18px 0 6px; }
+.lead { color: var(--muted); margin: 0 0 24px; max-width: 60ch; }
+figure { margin: 0 0 28px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { padding: 10px 14px; font-weight: 600; border-top: 1px solid var(--line); }
+figcaption a { color: var(--muted); text-decoration: none; margin-right: 4px; }
+details { padding: 0 14px 12px; }
+summary { cursor: pointer; color: var(--accent); }
+details p { margin: 8px 0 0; color: var(--text); max-width: 75ch; }
+.note { margin: 0; padding: 10px 14px; color: var(--muted); font-size: 0.95rem; border-top: 1px solid var(--line); }
+footer { color: var(--muted); font-size: 0.9rem; padding-bottom: 40px; }
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Site">
+    <a href="../">← Myo Lever Controller</a>
+    <a href="../results/">Results</a>
+    <a href="{{PPTX}}">Download the .pptx</a>
+  </nav>
+  <h1>Driving a robot with one forearm</h1>
+  <p class="lead">Our {{COUNT}}-slide deck for the AWARE-AI Fall Hackathon 2026, which won Best Presentation. Every number on it is read from the recordings and drive logs by <a href="https://github.com/ajbarea/Hackathon/tree/main/presentations/aware-ai-deck">a script</a>. Open "What we said" under a slide for the talk.</p>
+</header>
+<main>
+{{FIGURES}}
+</main>
+<footer>AJ Barea, Jose, Kiran and Xinyi Liu · <a href="https://github.com/ajbarea/Hackathon">ajbarea/Hackathon</a></footer>
+</body>
+</html>
