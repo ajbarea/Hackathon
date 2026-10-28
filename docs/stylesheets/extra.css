@@ -150,3 +150,55 @@
   color: var(--lv-text);
   line-height: 1.2;
 }
+
+/* Drive page: the Myo photo and the five arm poses. The poses are inline SVG drawn in
+   currentColor and the accent token, so they follow the color scheme. */
+.myo-photo img {
+  border-radius: 0.5rem;
+  max-width: 28rem;
+  width: 100%;
+  height: auto;
+}
+
+.pose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.md-typeset .pose {
+  margin: 0;
+  padding: 0.6rem;
+  border: 1px solid var(--lv-line);
+  border-radius: 0.5rem;
+  background: var(--lv-card);
+  color: var(--lv-text);
+  text-align: center;
+}
+
+.pose svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pose .arm { fill: none; stroke: currentColor; stroke-width: 10; stroke-linecap: round; }
+.pose .band { stroke: var(--lv-accent); stroke-width: 15; }
+.pose .joint { fill: currentColor; }
+.pose .ref { fill: none; stroke: var(--lv-muted); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.pose .move { fill: none; stroke: var(--lv-accent); stroke-width: 2.5; }
+.pose .tip, .pose .bandfill { fill: var(--lv-accent); }
+.pose .fist { fill: color-mix(in srgb, currentColor 14%, transparent); stroke: currentColor; stroke-width: 3; }
+.pose .timer { fill: var(--lv-accent); font-size: 13px; font-weight: 700; }
+
+.md-typeset .pose figcaption {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.md-typeset .pose figcaption strong {
+  display: block;
+  color: var(--lv-accent);
+}
