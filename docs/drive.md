@@ -57,4 +57,5 @@ More settings (`--expo`, `--vmax`, `--no-assist`, `--no-lag-comp`) and tuning ar
 ## No armband?
 
 Open the [live sim](sim/) and drive with W, A, S and D to see the courses. With the repo installed,
-`python examples/fake_myo_lsl.py --emit-cmd` drives it from synthetic EMG through the bridge.
+run `jackal-bridge --serve-site --open` for a local copy of the sim, then
+`python examples/fake_myo_lsl.py --emit-cmd` drives it from synthetic EMG.

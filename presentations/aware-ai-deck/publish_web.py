@@ -16,21 +16,23 @@ from pptx.enum.shapes import PP_PLACEHOLDER
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "deck"
-PPTX_URL = "https://github.com/ajbarea/Hackathon/releases/download/dataset-2026-10-23/AWARE-AI-Hackathon-Deck.pptx"
+# Shown under a slide whose figures need context the slide itself does not give.
+NOTES = {6: "The new-driver bars (33 % and 32 %) come from the TCN trained without gain augmentation; "
+            "with it, the TCN scored 17 % on a new driver. Full tables: examples/TCN.md."}
 
 
-def slide_text(slide) -> tuple[str, str]:
+def slide_text(slide, number: int) -> tuple[str, str]:
     lines = []
     for shape in slide.shapes:
         if shape.has_text_frame:
             lines += [p.text.strip() for p in shape.text_frame.paragraphs if p.text.strip()]
         if shape.has_table:
             lines += [" | ".join(c.text.strip() for c in row.cells) for row in shape.table.rows]
-    lines = [x for x in lines if not x.isdigit()]   # drop the page number
+    lines = [x for x in lines if x != str(number)]   # drop the page number
     titles = [sh.text_frame.text.strip() for sh in slide.shapes
               if sh.is_placeholder and sh.placeholder_format.type == PP_PLACEHOLDER.TITLE]
     title = titles[0] if titles else (lines[0] if lines else "Slide")
-    return title, ". ".join(lines)
+    return title, " ".join(x if x[-1] in ".:;?!" else x + "." for x in lines)
 
 
 def main(pptx: str, pngs: str) -> None:
@@ -41,18 +43,20 @@ def main(pptx: str, pngs: str) -> None:
         name = f"slide-{i:02d}.webp"
         im = Image.open(Path(pngs) / f"slide-{i:02d}.png").convert("RGB").resize((1600, 900), Image.LANCZOS)
         im.save(OUT / "slides" / name, "WEBP", quality=88, method=6)
-        title, alt = slide_text(slide)
+        title, alt = slide_text(slide, i)
         notes = slide.notes_slide.notes_text_frame.text.strip() if slide.has_notes_slide else ""
         said = (f'<details><summary>What we said</summary><p>{html.escape(notes)}</p></details>'
                 if notes else "")
+        note = f'<p class="note">{html.escape(NOTES[i])}</p>' if i in NOTES else ""
         figures.append(
             f'<figure id="s{i}"><img src="slides/{name}" width="1600" height="900" loading="{"eager" if i == 1 else "lazy"}"'
             f' alt="{html.escape(alt, quote=True)}"><figcaption><a href="#s{i}">{i}</a> · {html.escape(title)}'
-            f'</figcaption>{said}</figure>')
+            f'</figcaption>{note}{said}</figure>')
     page = (Path(__file__).with_name("web_deck.html").read_text()
-            .replace("{{FIGURES}}", "\n".join(figures)).replace("{{PPTX}}", PPTX_URL)
+            .replace("{{FIGURES}}", "\n".join(figures)).replace("{{PPTX}}", Path(pptx).name)
             .replace("{{COUNT}}", str(len(figures))))
     (OUT / "index.html").write_text(page)
+    (OUT / Path(pptx).name).write_bytes(Path(pptx).read_bytes())
     print(f"{len(figures)} slides -> {OUT}")
 
 

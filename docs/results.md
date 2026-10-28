@@ -25,7 +25,7 @@ Score is time plus 5 s per collision and 10 s per missed gate; lower is better.
 
 ## A slow, lossy link
 
-The judges also drove under a degraded link: 300 ms lag and 10 % of commands dropped. We ran a blind
+Judging included one run under a degraded link: 300 ms lag and 10 % of commands dropped. We ran a blind
 test of lag compensation: 8 sessions of 2 runs each on L1, with the condition hidden from the driver,
 compared session by session with an exact two-sided permutation test.
 
@@ -52,7 +52,7 @@ Accuracy over six poses; chance is 0.17. Each cell is the median across drivers,
 
 The second row is the TCN without gain augmentation, its better setting for a new driver. On each
 person's own data the LDA won for 3 of 4 drivers, and neither model generalises well to someone new.
-With 2.5 minutes of data per person the simple model is the right choice, and in lever mode EMG decides
+With one short calibration per person (60 s of held poses) the simple model is the right choice, and in lever mode EMG decides
 only the brake, where the personal LDA made no false fires and no misses on held-out takes.
 
 Full tables, with and without gain augmentation:
