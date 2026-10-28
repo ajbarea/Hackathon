@@ -33,3 +33,6 @@ myo_calibration.json
 
 # Personal Myo recordings: calibrations and drive logs (the shared dataset is a release asset)
 data/
+
+# Claude Code worktrees
+.claude/worktrees/

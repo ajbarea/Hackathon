@@ -1,17 +1,56 @@
-# AWARE-AI Hackathon: Drive a Jackal With Your Muscles
+<!-- budget: 900 words above the event kit -->
+<div align="center">
 
-Build a controller that drives a Clearpath Jackal through simulated courses using your own input: your
-muscles (Myo armband), a classifier, the IMU, anything. Your controller sends simple `(v, w)` commands
-(forward speed, turn rate). That's the whole contract.
+<img src="docs/assets/sim-l2-slalom.png" width="800" alt="The browser Jackal sim on the L2 Slalom course: the robot at the start line facing pairs of coloured posts, with the lidar view top right and the course panel bottom right">
 
-```
- your controller ──►  jackal-bridge (your laptop)  ──►  Jackal sim (your browser)
-                 ◄──  state: pose, speed, lidar, course progress (20 Hz)
-```
+# Myo Lever Controller
 
-## Drive with your arm: one command
+*Drive a simulated Clearpath Jackal with one forearm: arm angle steers, a firm fist brakes.*
 
-Our team's controller drives the Jackal from forearm angle and grip, read by the Myo armband. To try it:
+[![Best Presentation: AWARE-AI Fall Hackathon 2026](https://img.shields.io/badge/AWARE--AI_Fall_Hackathon_2026-Best_Presentation-c8102e)](#the-award)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-3776ab?logo=python&logoColor=white)](environment.yml)
+[![Dataset](https://img.shields.io/badge/dataset-AJ's_Myo_recordings-555)](https://github.com/ajbarea/Hackathon/releases/tag/dataset-2026-10-22)
+
+</div>
+
+---
+
+Our team's entry to the AWARE-AI Fall Hackathon (RIT, October 22-23, 2026). The challenge: read a Myo
+armband, turn it into forward speed and turn rate `(v, w)`, and drive a simulated Jackal through three
+timed courses, then keep it drivable over a slow, lossy link. Our controller reads your forearm like a
+lever: the armband's motion sensor sets speed and steering from the arm's angle, and its muscle (EMG)
+signal decides one thing, a deliberate fist that brakes. A lidar assist slows before obstacles and
+nudges you through gates you are already aimed at.
+
+## The award
+
+The team won **Best Presentation** at the AWARE-AI Fall Hackathon 2026. The deck is built from a
+script that reads every number it shows from the recordings and drive logs
+([`presentations/aware-ai-deck/`](presentations/aware-ai-deck/)).
+
+## Results
+
+From AJ's lever-mode drives (details and the commands that recompute them:
+[`examples/MYO_LEVER.md`](examples/MYO_LEVER.md)). All 51 recorded runs, the blind-test runs included, finished
+with 0 missed gates.
+
+| Course | Runs | Median score | Collisions |
+|---|---|---|---|
+| L1 Gates | 4 | 20.73 s | 0 |
+| L2 Slalom | 6 | 26.62 s | 0 |
+| L3 Corridor + Dock | 4 | 16.26 s | 0 |
+
+- **Slow link (300 ms lag, 10 % drop):** a blind test of lag compensation, 8 sessions with the
+  condition hidden from the driver, gave better medians on score, smoothness and workload, but no
+  difference was significant (p = 0.26 to 0.63). It stays on because it did no measurable harm.
+- **Deep learning or not:** a causal temporal convolutional network (TCN) against the controller's
+  linear discriminant (LDA), over four drivers. On each person's own calibration the LDA won for 3 of
+  4 drivers (median accuracy 0.85 against 0.68), and neither generalised well to a driver it had never
+  seen. See [`examples/TCN.md`](examples/TCN.md).
+
+## Run it
+
+You need a Myo armband, conda and Chrome. Quit Myo Connect first if it is running.
 
 ```bash
 git clone https://github.com/ajbarea/Hackathon.git && cd Hackathon
@@ -20,11 +59,69 @@ conda activate jackal
 python examples/lever.py <your name>
 ```
 
-It connects to the Myo, calibrates you the first time (about 2.5 minutes of guided poses), opens the
-sim in your browser, and drives. How to drive, and what we measured:
-[**examples/MYO_LEVER.md**](examples/MYO_LEVER.md).
+It connects to our team's Myo by default (add `--addr nearest` for any other band), calibrates you
+the first time (about 2.5 minutes of guided poses), opens the
+sim in your browser and drives. Next time it skips straight to driving.
 
-## Start here
+| Your arm | The robot |
+|---|---|
+| Forward, level | Goes. Lower your arm to go faster |
+| Raised from the elbow | Stops |
+| Rolled left or right | Turns |
+| Tipped down | Reverses |
+| Firm fist, held 0.4 s | Brakes |
+
+No armband? Run `jackal-bridge --serve-site --open` and drive the sim with W, A, S and D, or
+`python examples/fake_myo_lsl.py --emit-cmd` to drive it from synthetic EMG.
+
+## The Myo data pipeline
+
+```
+Myo armband ──BLE──► myo_lsl_publisher.py ──LSL──► Myo_EMG (8 ch, 200 Hz) + Myo_IMU (10 ch, 50 Hz)
+                                                      │
+        calibration: myo_gestures.py record           ▼   six poses × 2, 3, 5 s takes, saved as CSV
+        drive:       myo_gestures.py drive --mode lever
+                       IMU  → arm angle → speed and steering (armdrive.py)
+                       EMG  → 16 features → LDA: fist or not → brake (gestures.py)
+                       lidar → slow before obstacles, gate nudge (armdrive.assist)
+                                                      │  (v, w) at 20 Hz
+                                                      ▼
+                          jackal-bridge ──WebSocket──► browser sim (scores every run)
+```
+
+1. **Stream.** `myo_lsl_publisher.py` reads the band over the laptop's Bluetooth and publishes EMG and
+   IMU on Lab Streaming Layer.
+2. **Calibrate.** `myo_gestures.py record` prompts six poses (GO, STOP, LEFT, RIGHT, REVERSE, BRAKE),
+   each held for 2, 3 and 5 s, and saves every take as CSV in `data/<name>-lever/`.
+3. **Drive.** The accelerometer's gravity direction gives the arm's angle against your calibrated
+   poses (never yaw, so it does not drift). EMG
+   becomes 16 features per 200 ms window (log RMS and log waveform length per channel). A brake
+   needs an LDA, trained on your own takes (or the pooled model in `data/brake-pooled.npz` when it
+   exists), to read a fist, and the EMG level to pass a share of your calibrated fist level.
+4. **Log.** Every drive writes `drives/drive_*.csv`: one row per 20 Hz command, with the arm angles,
+   the EMG features, the command sent and course progress.
+
+`lever.py` runs all of this, plus `jackal-bridge --serve-site --open`, in one command. Tests:
+`pytest examples/tests`.
+
+**Data.** AJ's recordings (two sessions, the sim's run CSVs and every drive log) are the
+[`dataset-2026-10-22`](https://github.com/ajbarea/Hackathon/releases/tag/dataset-2026-10-22) release.
+
+## Team
+
+AJ Barea, Jose, Kiran and Xinyi Liu. Xinyi built the gate assist, the sim's lidar minimap, the
+assist viewer and the pooled brake model (`train_pooled.py`); AJ wrote
+the lever controller, the TCN study and the deck generator. The event kit below, the sim and the
+bridge come from the organizers' [AHRTLab/Hackathon](https://github.com/AHRTLab/Hackathon) repo, which
+this repo forks.
+
+---
+
+## The event kit
+
+Everything below is the organizers' starter kit that every team began from.
+
+### Start here
 
 | | |
 |---|---|
@@ -34,7 +131,7 @@ sim in your browser, and drives. How to drive, and what we measured:
 | Slides | [`presentations/`](presentations/): the kickoff, and **EMG On-Ramp** (new to EMG? start here) |
 | Live sim | https://ahrtlab.github.io/Hackathon/ (Chrome), or offline: `jackal-bridge --serve-site --open` |
 
-## Your code
+### Your code
 
 You edit **one file**: your copy of `examples/controller_template.py` (e.g. `examples/my_team.py`).
 Everything else (connecting to the bridge, sim state, 20 Hz timing, reconnects, stopping safely) is done
@@ -58,7 +155,7 @@ python examples/my_team.py              # with jackal-bridge running and the sim
 you pass a gate, collide or finish. Prefer another language? Send JSON to the bridge yourself:
 [`protocol/PROTOCOL.md`](protocol/PROTOCOL.md).
 
-### Examples to learn from
+#### Examples to learn from
 
 | Example | What it shows |
 |---|---|
@@ -77,7 +174,7 @@ with the env): `lsl-web-viewer --open` shows every LSL stream on your laptop and
 
 ---
 
-## For staff and developers
+### For staff and developers
 
 **Running the event:** [`docs/RUNBOOK.md`](docs/RUNBOOK.md) (deploy, pre-event checklist, day-of,
 judging, data, troubleshooting). Staff-only material (the baseline controller) lives in the gitignored
