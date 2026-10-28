@@ -17,8 +17,8 @@ from pptx.enum.shapes import PP_PLACEHOLDER
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "deck"
 # Shown under a slide whose figures need context the slide itself does not give.
-NOTES = {6: "The new-driver bars (33 % and 32 %) come from the TCN trained without gain augmentation; "
-            "with it, the TCN scored 17 % on a new driver. Full tables: examples/TCN.md."}
+NOTES = {6: "The TCN's new-driver bar (33%) is the run without gain augmentation; with it, the TCN "
+            "scored 17% on a new driver. Full tables: examples/TCN.md."}
 
 
 def slide_text(slide, number: int) -> tuple[str, str]:
