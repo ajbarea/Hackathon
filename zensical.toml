@@ -5,7 +5,7 @@ site_author = "AJ Barea"
 site_url = "https://ajbarea.github.io/Hackathon/"
 repo_url = "https://github.com/ajbarea/Hackathon"
 repo_name = "ajbarea/Hackathon"
-copyright = "AJ Barea, Jose, Kiran and Xinyi Liu"
+copyright = "AJ Barea"
 
 nav = [
   { "Home" = "index.md" },
