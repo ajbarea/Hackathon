@@ -31,7 +31,8 @@ script that reads every number it shows from the recordings and drive logs
 ## Results
 
 From AJ's lever-mode drives (details and the commands that recompute them:
-[`examples/MYO_LEVER.md`](examples/MYO_LEVER.md)). All 51 recorded runs finished with 0 missed gates.
+[`examples/MYO_LEVER.md`](examples/MYO_LEVER.md)). All 51 recorded runs, the blind-test runs included, finished
+with 0 missed gates.
 
 | Course | Runs | Median score | Collisions |
 |---|---|---|---|
@@ -49,7 +50,7 @@ From AJ's lever-mode drives (details and the commands that recompute them:
 
 ## Run it
 
-You need the Myo armband, Python through conda, and Chrome.
+You need a Myo armband, conda and Chrome. Quit Myo Connect first if it is running.
 
 ```bash
 git clone https://github.com/ajbarea/Hackathon.git && cd Hackathon
@@ -58,7 +59,8 @@ conda activate jackal
 python examples/lever.py <your name>
 ```
 
-It connects to the Myo, calibrates you the first time (about 2.5 minutes of guided poses), opens the
+It connects to our team's Myo by default (add `--addr nearest` for any other band), calibrates you
+the first time (about 2.5 minutes of guided poses), opens the
 sim in your browser and drives. Next time it skips straight to driving.
 
 | Your arm | The robot |
@@ -69,8 +71,8 @@ sim in your browser and drives. Next time it skips straight to driving.
 | Tipped down | Reverses |
 | Firm fist, held 0.4 s | Brakes |
 
-No armband? `python examples/fake_myo_lsl.py` publishes the same LSL streams with synthetic data,
-enough to try the pipeline and the sim.
+No armband? Run `jackal-bridge --serve-site --open` and drive the sim with W, A, S and D, or
+`python examples/fake_myo_lsl.py --emit-cmd` to drive it from synthetic EMG.
 
 ## The Myo data pipeline
 
@@ -93,8 +95,9 @@ Myo armband ──BLE──► myo_lsl_publisher.py ──LSL──► Myo_EMG (
    each held for 2, 3 and 5 s, and saves every take as CSV in `data/<name>-lever/`.
 3. **Drive.** The accelerometer's gravity direction gives the arm's angle against your calibrated
    poses (never yaw, so it does not drift). EMG
-   becomes 16 features per 200 ms window (log RMS and log waveform length per channel), and an LDA
-   trained on your own takes decides whether you are making a fist.
+   becomes 16 features per 200 ms window (log RMS and log waveform length per channel). A brake
+   needs an LDA, trained on your own takes (or the pooled model in `data/brake-pooled.npz` when it
+   exists), to read a fist, and the EMG level to pass a share of your calibrated fist level.
 4. **Log.** Every drive writes `drives/drive_*.csv`: one row per 20 Hz command, with the arm angles,
    the EMG features, the command sent and course progress.
 
@@ -106,7 +109,8 @@ Myo armband ──BLE──► myo_lsl_publisher.py ──LSL──► Myo_EMG (
 
 ## Team
 
-AJ Barea, Jose, Kiran and Xinyi Liu. Xinyi built the gate assist and the sim's lidar minimap; AJ wrote
+AJ Barea, Jose, Kiran and Xinyi Liu. Xinyi built the gate assist, the sim's lidar minimap, the
+assist viewer and the pooled brake model (`train_pooled.py`); AJ wrote
 the lever controller, the TCN study and the deck generator. The event kit below, the sim and the
 bridge come from the organizers' [AHRTLab/Hackathon](https://github.com/AHRTLab/Hackathon) repo, which
 this repo forks.
