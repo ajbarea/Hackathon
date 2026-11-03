@@ -20,6 +20,13 @@ export function panel(pos: Partial<CSSStyleDeclaration>, id: string): HTMLDivEle
   return p;
 }
 
+/** A visible label tied to the control with this id, so screen readers announce it. */
+export function labelFor(text: string, id: string, style: Partial<CSSStyleDeclaration> = {}): HTMLLabelElement {
+  const l = el('label', { opacity: '.7', ...style }, text);
+  l.htmlFor = id;
+  return l;
+}
+
 export function button(label: string, onClick: () => void, color = '#2d333c'): HTMLButtonElement {
   const b = el('button', {
     background: color, color: '#e8eaed', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '6px',

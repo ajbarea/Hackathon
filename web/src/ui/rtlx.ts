@@ -3,7 +3,7 @@
 // the others, higher = more workload. Optional: shown after each finish / DNF when the session has
 // "ask workload" switched on.
 
-import { button, el } from './dom';
+import { button, el, labelFor } from './dom';
 
 export const RTLX_DIMS = [
   { key: 'mental', label: 'Mental demand', lo: 'Very low', hi: 'Very high' },
@@ -33,18 +33,22 @@ export class RtlxForm {
       background: 'rgba(0,0,0,0.55)',
     });
     this.overlay.id = 'rtlx';
+    this.overlay.setAttribute('role', 'dialog');
+    this.overlay.setAttribute('aria-modal', 'true');
+    this.overlay.setAttribute('aria-labelledby', 'rtlx-title');
     const card = el('div', {
       width: '440px', maxWidth: '92vw', maxHeight: '88vh', overflowY: 'auto', padding: '20px',
       borderRadius: '12px', background: '#1b1e24', boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
     });
     this.title = el('div', { fontSize: '15px', fontWeight: '600', marginBottom: '4px' }, 'Workload (NASA-RTLX)');
+    this.title.id = 'rtlx-title';
     card.append(this.title, el('div', { opacity: '0.6', marginBottom: '14px' }, 'Rate the run you just finished.'));
     for (const d of RTLX_DIMS) {
       const head = el('div', { display: 'flex', justifyContent: 'space-between', marginBottom: '3px' });
       const val = el('span', { opacity: '0.7', fontVariantNumeric: 'tabular-nums' }, '50');
-      head.append(el('span', {}, d.label), val);
       const s = el('input', { width: '100%' });
-      Object.assign(s, { type: 'range', min: '0', max: '100', step: '5', value: '50' });
+      Object.assign(s, { type: 'range', min: '0', max: '100', step: '5', value: '50', id: `rtlx-${d.key}` });
+      head.append(labelFor(d.label, s.id, { opacity: '1' }), val);
       s.dataset.key = d.key;
       s.addEventListener('input', () => { val.textContent = s.value; });
       const anchors = el('div', { display: 'flex', justifyContent: 'space-between', fontSize: '10px', opacity: '0.5' });
