@@ -1,33 +1,29 @@
 # IMPL
 
-## Resume (2026-11-02 18:15, site polish slice 1 of 3, PAUSED by Heph)
+## Resume (2026-11-03, site polish slice 1 of 3: Hackathon)
 
 Brief: `~/.local/state/fleet-orchestrator/task-site-deslop.src` (Hackathon, then talks, then
-fleet-briefing). This branch is `polish/site-deslop`, worktree `.claude/worktrees/polish`.
-`gh` defaults to upstream AHRTLab: pass `-R ajbarea/Hackathon` (issues are on there).
+fleet-briefing). Branch `polish/site-deslop`, worktree `.claude/worktrees/polish`.
+`gh` defaults to upstream AHRTLab: pass `-R ajbarea/Hackathon`. Issues were off on the fork; turned
+on 11-03 for issue #16 (labels only: issue types exist only on org repos).
 
-Done (audit only, no site edits yet):
-- prose_check on docs/*.md and README: clean apart from 4 long sentences; 0 em-dashes in docs,
-  deck, overrides, web/index.html.
-- 28 non-anchor links on the live site: all 200.
-- Live audit (axe + console + images) at 1920 light/dark and 390 phone: report and the script in
-  `~/.local/state/fleet-orchestrator/site-polish/` (audit.py, before-report.json). Re-run:
-  `flock -o /tmp/fleet-heavy.lock uv run --with playwright python -I audit.py OUT before URL...`
-  (it scrolls each page first so the shared reveal.js sections show in full-page shots).
+Done:
+- ✅ Issue #16 filed and assigned. Commit 015c05c: award name from the certificate ("AWARE-AI Fall
+  2026 Hackathon", Oct 23 2026), team credit (AJ led development and data collection with Claude
+  Code; Jose, Kiran, Xinyi recorded the four-driver calibrations), deck slide-number links
+  underlined, code-block line anchors off, sim labels / aria-pressed / #304ffe.
+- ✅ Sim: `npm test` 65 passed, `tsc` + build clean.
+- ✅ Docs differential: Zensical defaults copied into zensical.toml build byte-identical to no
+  table (0 files differ); anchors off changes only the 5 pages with code blocks, anchors only.
+- ✅ Links: 28 live links 200.
 
-Findings to fix (next):
-1. Award name: the certificate reads "AWARE-AI Fall 2026 Hackathon" (Oct 23, 2026); the site says
-   "AWARE-AI Fall Hackathon 2026" (index.md hero + description, zensical.toml site_description).
-2. Deck TOC links (`a[href$="#s1"]`...): link-in-text-block contrast 2.16:1 light, 1.78:1 dark;
-   underline or recolour them (docs/deck/index.html).
-3. Sim (web/): chase camera button 4.25:1 (#e8eaed on #3d5afe, needs 4.5); #bridge-url, latency and
-   drop sliders, course select have no labels. web/ came from the organizers; keep edits to
-   aria-labels and one colour.
-4. Code blocks: Material line-number anchors have no accessible name (axe link-name); check the
-   highlight config in zensical.toml (anchor_linenums).
-5. Not a bug: reveal.js hides below-fold sections until scrolled (canonical copy lives in techne).
-6. Check deck slide images 07-17 load (axe saw them unloaded; likely loading=lazy).
+Next:
+- 📋 Before/after shots from the audit (`audit.py`, scratch `shots/`) to
+  fleet-briefing/shots/2026-11-03/Hackathon-16-*, one line in shots/README.md.
+- 📋 PR (assignee ajbarea, closes #16), independent opus review, merge, check the Pages deploy.
 
-Next after fixes: before/after shots to fleet-briefing/shots/2026-11-02/hackathon-<issue>-*,
-issue then PR (assigned ajbarea), independent opus review, merge; then talks, then fleet-briefing.
-Verify: re-run audit.py on the PR's Pages build or a local `zensical serve`.
+Left as is (theme or organizers' pages): axe `region` on Material's progress bar, `landmark-unique`
+on BRIEF's code nav.
+
+Re-run the audit: `flock -o /tmp/fleet-heavy.lock uv run --with playwright python -I audit.py OUT
+TAG URL...` from `~/.local/state/fleet-orchestrator/site-polish/`.
