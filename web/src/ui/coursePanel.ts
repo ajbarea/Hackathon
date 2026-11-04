@@ -10,6 +10,7 @@ import { el, panel } from './dom';
 export class CoursePanel {
   private line: HTMLDivElement;
   private banner: HTMLDivElement;
+  private status: HTMLDivElement; // always rendered, so screen readers announce the result when it appears
   private posts: [number, number][] = [];
   private lastNext = -1;
 
@@ -27,6 +28,12 @@ export class CoursePanel {
     });
     this.banner.id = 'finish-banner';
     document.body.appendChild(this.banner);
+    this.status = el('div', {
+      position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'nowrap',
+    });
+    this.status.id = 'finish-status';
+    this.status.setAttribute('role', 'status');
+    document.body.appendChild(this.status);
 
     (sim.course.gates ?? []).forEach((_, k) => {
       this.posts.push([idOf(sim.mj, sim.model, 'geom', `gate${k}_l`), idOf(sim.mj, sim.model, 'geom', `gate${k}_r`)]);
@@ -64,8 +71,10 @@ export class CoursePanel {
         : `<div style="font-size:22px;font-weight:700;color:#ffb74d">DNF</div>time limit reached · ${res.gates_passed}/${n} gates<br>`;
       this.banner.innerHTML += `<span style="opacity:.6">Press Reset (or send action "restart") to run again</span>`;
       this.banner.style.display = 'block';
+      this.status.textContent = this.banner.textContent;
     } else if (!res && this.banner.style.display !== 'none') {
       this.banner.style.display = 'none';
+      this.status.textContent = '';
     }
   }
 }

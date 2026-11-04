@@ -39,6 +39,7 @@ export class Controls {
     }
     const paint = (m: CamMode) => camButtons.forEach((b, k) => {
       b.style.background = k === m ? '#304ffe' : '#2d333c';
+      b.style.boxShadow = k === m ? 'inset 0 -3px 0 #e8eaed' : 'none'; // a cue that does not rely on color
       b.setAttribute('aria-pressed', String(k === m));
     });
     cams.onChange(paint);
@@ -55,7 +56,9 @@ export class Controls {
       const input = el('input', { flex: '1' });
       Object.assign(input, { type: 'range', min: '0', max: String(max), step: String(step), value: String(value), id });
       const out = el('span', { width: '58px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }, `${value} ${unit}`);
-      input.addEventListener('input', () => { out.textContent = `${input.value} ${unit}`; });
+      const show = () => { out.textContent = `${input.value} ${unit}`; input.setAttribute('aria-valuetext', out.textContent); };
+      show();
+      input.addEventListener('input', show);
       row(labelFor(label, id, { width: '52px' }), input, out);
       return input;
     };

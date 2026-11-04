@@ -77,6 +77,7 @@ name = "Myo Lever Controller on GitHub"
 
 # Zensical's default extensions, written out because this table replaces them. One change:
 # anchor_linenums off, since no block shows line numbers and each empty anchor is a keyboard stop.
+# Copied from Zensical 0.0.73: on an upgrade, diff it against the new defaults.
 [project.markdown_extensions]
 abbr = {}
 admonition = {}

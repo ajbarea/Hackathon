@@ -22,27 +22,27 @@ export function rtlxScore(ratings: Record<RtlxKey, number>): RtlxScores {
 }
 
 export class RtlxForm {
-  private overlay: HTMLDivElement;
+  private dialog: HTMLDialogElement;
   private title: HTMLDivElement;
   private sliders = new Map<RtlxKey, HTMLInputElement>();
   private done: ((s: RtlxScores | null) => void) | null = null;
+  private opener: HTMLElement | null = null;
 
   constructor() {
-    this.overlay = el('div', {
-      position: 'fixed', inset: '0', zIndex: '30', display: 'none', alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(0,0,0,0.55)',
+    // A native modal <dialog>: showModal() makes the page behind it inert and Escape fires `cancel`.
+    this.dialog = el('dialog', {
+      width: '440px', maxWidth: '92vw', maxHeight: '88vh', overflowY: 'auto', padding: '20px', border: 'none',
+      borderRadius: '12px', background: '#1b1e24', color: 'inherit', boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
     });
-    this.overlay.id = 'rtlx';
-    this.overlay.setAttribute('role', 'dialog');
-    this.overlay.setAttribute('aria-modal', 'true');
-    this.overlay.setAttribute('aria-labelledby', 'rtlx-title');
-    const card = el('div', {
-      width: '440px', maxWidth: '92vw', maxHeight: '88vh', overflowY: 'auto', padding: '20px',
-      borderRadius: '12px', background: '#1b1e24', boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-    });
+    this.dialog.id = 'rtlx';
+    this.dialog.setAttribute('aria-labelledby', 'rtlx-title');
+    this.dialog.addEventListener('cancel', (e) => { e.preventDefault(); this.finish(false); });
+    const backdrop = el('style');
+    backdrop.textContent = '#rtlx::backdrop { background: rgba(0,0,0,0.55); }';
+    document.head.appendChild(backdrop);
     this.title = el('div', { fontSize: '15px', fontWeight: '600', marginBottom: '4px' }, 'Workload (NASA-RTLX)');
     this.title.id = 'rtlx-title';
-    card.append(this.title, el('div', { opacity: '0.6', marginBottom: '14px' }, 'Rate the run you just finished.'));
+    this.dialog.append(this.title, el('div', { opacity: '0.6', marginBottom: '14px' }, 'Rate the run you just finished.'));
     for (const d of RTLX_DIMS) {
       const head = el('div', { display: 'flex', justifyContent: 'space-between', marginBottom: '3px' });
       const val = el('span', { opacity: '0.7', fontVariantNumeric: 'tabular-nums' }, '50');
@@ -55,7 +55,7 @@ export class RtlxForm {
       anchors.append(el('span', {}, d.lo), el('span', {}, d.hi));
       const row = el('div', { marginBottom: '12px' });
       row.append(head, s, anchors);
-      card.appendChild(row);
+      this.dialog.appendChild(row);
       this.sliders.set(d.key, s);
     }
     const buttons = el('div', { display: 'flex', gap: '8px', marginTop: '8px' });
@@ -65,23 +65,26 @@ export class RtlxForm {
     const skip = button('Skip', () => this.finish(false));
     skip.id = 'rtlx-skip';
     buttons.append(submit, skip);
-    card.appendChild(buttons);
-    this.overlay.appendChild(card);
-    document.body.appendChild(this.overlay);
+    this.dialog.appendChild(buttons);
+    document.body.appendChild(this.dialog);
   }
 
-  get open(): boolean { return this.overlay.style.display !== 'none'; }
+  get open(): boolean { return this.dialog.open; }
 
   /** Show the form; resolves with the scores, or null if skipped. */
   ask(heading: string): Promise<RtlxScores | null> {
     this.title.textContent = `Workload (NASA-RTLX): ${heading}`;
     for (const s of this.sliders.values()) { s.value = '50'; s.dispatchEvent(new Event('input')); }
-    this.overlay.style.display = 'flex';
+    this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    this.dialog.showModal();
+    this.sliders.values().next().value?.focus();
     return new Promise((ok) => { this.done = ok; });
   }
 
   private finish(submit: boolean): void {
-    this.overlay.style.display = 'none';
+    if (this.dialog.open) this.dialog.close();
+    if (this.opener?.isConnected) this.opener.focus();
+    this.opener = null;
     const ratings = Object.fromEntries([...this.sliders].map(([k, s]) => [k, Number(s.value)])) as Record<RtlxKey, number>;
     const cb = this.done;
     this.done = null;

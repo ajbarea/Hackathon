@@ -109,8 +109,9 @@ Myo armband ──BLE──► myo_lsl_publisher.py ──LSL──► Myo_EMG (
 
 ## Team
 
-AJ Barea, Jose, Kiran and Xinyi Liu. AJ led development and data collection, working with Claude
-Code: the lever controller, the published recordings, the TCN study and the deck generator. Xinyi
+AJ Barea, Jose, Kiran and Xinyi Liu. AJ led development and data collection with Claude Code,
+wrote the lever controller, the TCN study and the deck generator, and published both dataset
+releases. Xinyi
 built the gate assist, the sim's lidar minimap, the assist viewer and the pooled brake model
 (`train_pooled.py`). Jose, Kiran and Xinyi recorded the calibrations for the four-driver study. The
 event kit below, the sim and the bridge come from the organizers'

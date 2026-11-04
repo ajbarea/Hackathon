@@ -77,9 +77,9 @@ one command. [All the results, including what did not work →](results.md)
 
 ## The team
 
-**AJ Barea**, **Jose**, **Kiran** and **Xinyi Liu**. AJ led development and data collection, working
-with Claude Code: the lever controller, the published recordings, the neural-network study and the
-deck generator. Xinyi built the gate assist, the sim's lidar minimap, the assist viewer and the pooled
+**AJ Barea**, **Jose**, **Kiran** and **Xinyi Liu**. AJ led development and data collection with
+Claude Code, wrote the lever controller, the neural-network study and the deck generator, and
+published both dataset releases. Xinyi built the gate assist, the sim's lidar minimap, the assist viewer and the pooled
 brake model. Jose, Kiran and Xinyi recorded the calibrations for the four-driver study. The sim, the
 bridge and the event kit come from the organizers'
 [AHRTLab/Hackathon](https://github.com/AHRTLab/Hackathon) repo, which ours forks.

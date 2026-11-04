@@ -35,6 +35,7 @@ test('URL params set latency / drop / seed; the run CSV records the condition', 
   expect(await page.evaluate(() => (window as any).__sim.impairment.settings())).toEqual({ latencyMs: 100, dropPct: 10, seed: 5 });
   await expect(page.locator('#hud-impairment')).toHaveText('⏱ 100 ms · 10 % drop');
   await expect(page.locator('#knob-latency')).toHaveValue('100');
+  await expect(page.locator('#knob-latency')).toHaveAttribute('aria-valuetext', '100 ms');
   const p = await autopilot(bridge.port);
   expect(await p.exited, p.out.join('')).toBe(0);
   const [row] = await runsCsv(page);
@@ -49,6 +50,7 @@ test('sliders change the knobs; a change mid-run waits for Reset', async ({ page
     el.value = val; el.dispatchEvent(new Event('input')); el.dispatchEvent(new Event('change'));
   }, v);
   await set('#knob-latency', '250');
+  await expect(page.locator('#knob-latency')).toHaveAttribute('aria-valuetext', '250 ms');
   expect(await page.evaluate(() => (window as any).__sim.impairment.latencyMs)).toBe(250);
   await page.locator('canvas#view').click();
   await hold(page, 'w', 1500);                                  // starts a scored run (the clock starts on movement)
@@ -61,13 +63,15 @@ test('sliders change the knobs; a change mid-run waits for Reset', async ({ page
   void errors;
 });
 
-test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip leaves it blank; keys paused', async ({ page, bridge, errors }) => {
+test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Escape leave it blank; keys paused', async ({ page, bridge, errors }) => {
   test.setTimeout(240_000);
   await open(page, bridge.port, 'course=L1-gates&rtlx=1');
   await expect(page.locator('#ask-rtlx')).toBeChecked();
 
   expect(await (await autopilot(bridge.port)).exited).toBe(0);
   await expect(page.locator('#rtlx')).toBeVisible();
+  await expect(page.locator('#rtlx-mental')).toBeFocused();     // a modal moves focus inside it
+  await expect(page.locator('#finish-status')).not.toBeEmpty();
   const x0 = (await simState(page)).pose.x;
   await page.keyboard.down('w');                                // driving is paused while the form is open
   await page.waitForTimeout(600);
@@ -81,9 +85,15 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip leaves i
   await expect(page.locator('#rtlx')).toBeVisible();
   await page.locator('#rtlx-skip').click();
 
+  expect(await (await autopilot(bridge.port)).exited).toBe(0);
+  await expect(page.locator('#rtlx')).toBeVisible();
+  await page.keyboard.press('Escape');                          // Escape is Skip
+  await expect(page.locator('#rtlx')).toBeHidden();
+
   const rows = await runsCsv(page);
-  expect(rows).toHaveLength(2);
+  expect(rows).toHaveLength(3);
   expect(rows[0]).toMatchObject({ rtlx: '70', rtlx_mental: '70', rtlx_performance: '70', rtlx_frustration: '70' });
   expect(rows[1]).toMatchObject({ rtlx: '', rtlx_mental: '' });
+  expect(rows[2]).toMatchObject({ rtlx: '', rtlx_mental: '' });
   void errors;
 });
