@@ -110,6 +110,7 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
 
 const drift = async (page: Page, ms: number): Promise<number> => {
   const a = (await simState(page)).pose;
+  expect(a.x).toBeGreaterThan(-3.6);                            // clear floor ahead: a stuck key cannot stall on the wall
   await page.waitForTimeout(ms);
   const b = (await simState(page)).pose;
   return Math.hypot(b.x - a.x, b.y - a.y);
@@ -118,12 +119,13 @@ const drift = async (page: Page, ms: number): Promise<number> => {
 base('a drive key released in a text field or the open form does not stay held', async ({ page, errors }) => {
   await openSim(page, '?course=L0-sandbox');
   const pressThenRelease = async (into: () => Promise<void>) => {
+    await page.getByRole('button', { name: 'Reset' }).click();  // back to (0,0); S reverses toward ~4.7 m of open floor
     await page.locator('canvas#view').click();
-    await page.keyboard.down('w');
+    await page.keyboard.down('s');
     await page.waitForTimeout(400);
-    expect(await drift(page, 300)).toBeGreaterThan(0.02);        // W really drives
+    expect(await drift(page, 300)).toBeGreaterThan(0.02);        // S really drives
     await into();
-    await page.keyboard.up('w');
+    await page.keyboard.up('s');
   };
   await pressThenRelease(() => page.locator('#team-id').focus());
   await page.locator('canvas#view').click();
