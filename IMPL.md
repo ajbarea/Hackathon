@@ -1,6 +1,6 @@
 # IMPL
 
-## Resume (2026-11-04, Personal; Hackathon #17 S1 fix measured, final verify running)
+## Resume (2026-11-04, Personal; all three sites done, Hackathon #17 merging)
 
 Brief: `~/.local/state/fleet-orchestrator/task-site-deslop.src` (Hackathon, then talks, then
 fleet-briefing). This branch `polish/site-deslop`, worktree `.claude/worktrees/polish`.
@@ -31,9 +31,10 @@ scratch path in `S=`, so edit that line before reuse).
   - ✅ aa83abc measured 11-04 (harness and logs in the 918d417d scratch, mut18/): unit 65; m4 e2e 4/4
     on Google Chrome; `dlg` and release mutants fail at +0/+400/+800 ms before keyup (drift 0.96 m);
     the unmutated test passes with +800 ms.
-  - 📋 Verify pass on aa83abc (fresh Opus), report appends to
-    `/tmp/claude-1001/-home-ajbar-ajsoftworks/918d417d-fee9-4cf6-9409-22d12e445b98/scratchpad/verify-h17-r3.md`.
-    If clean: squash-merge #17, check Pages (site, /deck/, /sim/), close #16, report to Heph.
+  - ✅ Verify pass on aa83abc CLEAN (0 Blocking, 0 Should-fix, 1 Nit; report copied to
+    `~/.local/state/fleet-orchestrator/site-polish/verify-h17-r3.md`). Nit (x0 read before the
+    bridge-idle wait) fixed in 61b115b; measured: unit 65, m4 4/4, pause mutant fails at m4:84.
+  - ✅ PR body: one line on the mutant checks. Squash-merge #17, then the Pages check (site, /deck/, /sim/).
 
 ### Left as is
 Theme or organizers' pages: axe `region` on Material's progress bar, `landmark-unique` on BRIEF's
