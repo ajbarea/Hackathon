@@ -54,8 +54,8 @@ scratch path in `S=`, so edit that line before reuse).
 - ✅ Round 2 (report `/home/ajbar/.local/state/fleet-orchestrator/site-polish/review-talks77-r2.md`): 0 Blocking, 1 Should-fix, 3 Nits; Duet-safe. Pushed 569a2b9: phone tabindex only when
   nothing in .reveal .slides is focusable; two-tone focus frame (.reveal-viewport:focus-visible::after, deck.css end); `?receiver`
   (speaker-view previews) is never phone; N3 comment.
-- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/run.sh` (fix N=/W= lines and its probe.py path; it uses
-  r2t/serve.sh and r2t/audit.py from the old scratch, copy them too): builds _site, probe.json (Duet/FA first Tab lands on a
+- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/run.sh` (fix N=/W= lines and its probe.py path; serve.sh and the every-slide audit.py are now in site-polish/ too;
+  note site-polish/audit.py was overwritten 11-04 by the reviewer's every-slide audit, same usage BASE OUT.json): builds _site, probe.json (Duet/FA first Tab lands on a
   figure item, Kourai on body with ::after frame, tap no frame, receiver at 428 not phone, desktop unchanged) and every-slide
   axe audit.json must be 0. Then PR body: What-landed row for the frame + speaker previews; FA and Kourai Before = 3 rules (target
   size came and went on all three); "slide number moves 1px"; drop the 109 count ("every link and image returns 200"); cite
