@@ -72,11 +72,16 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
   await expect(page.locator('#rtlx')).toBeVisible();
   await expect(page.locator('#rtlx-mental')).toBeFocused();     // a modal moves focus inside it
   await expect(page.locator('#finish-status')).not.toBeEmpty();
+  await expect(page.locator('#rtlx-result')).toHaveText(/^Finished, score \d+\.\d\d s\.$/);
   const x0 = (await simState(page)).pose.x;
+  await page.locator('#rtlx-skip').focus();                     // a slider would swallow the key on its own
   await page.keyboard.down('w');                                // driving is paused while the form is open
   await page.waitForTimeout(600);
   await page.keyboard.up('w');
   expect(Math.abs((await simState(page)).pose.x - x0)).toBeLessThan(0.01);
+  const cam = await page.evaluate(() => (window as any).__cams.mode);
+  await page.keyboard.press('c');                               // nor does C switch the camera behind it
+  expect(await page.evaluate(() => (window as any).__cams.mode)).toBe(cam);
   await page.evaluate(() => (window as any).__rtlx.setAll(70));
   await page.locator('#rtlx-submit').click();
   await expect(page.locator('#rtlx')).toBeHidden();

@@ -24,6 +24,7 @@ export function rtlxScore(ratings: Record<RtlxKey, number>): RtlxScores {
 export class RtlxForm {
   private dialog: HTMLDialogElement;
   private title: HTMLDivElement;
+  private result: HTMLSpanElement;
   private sliders = new Map<RtlxKey, HTMLInputElement>();
   private done: ((s: RtlxScores | null) => void) | null = null;
   private opener: HTMLElement | null = null;
@@ -31,18 +32,26 @@ export class RtlxForm {
   constructor() {
     // A native modal <dialog>: showModal() makes the page behind it inert and Escape fires `cancel`.
     this.dialog = el('dialog', {
-      width: '440px', maxWidth: '92vw', maxHeight: '88vh', overflowY: 'auto', padding: '20px', border: 'none',
+      width: '440px', maxWidth: '92vw', boxSizing: 'border-box', maxHeight: '88vh', overflowY: 'auto', padding: '20px', border: 'none',
       borderRadius: '12px', background: '#1b1e24', color: 'inherit', boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
     });
     this.dialog.id = 'rtlx';
     this.dialog.setAttribute('aria-labelledby', 'rtlx-title');
+    this.dialog.setAttribute('aria-describedby', 'rtlx-result rtlx-prompt');
     this.dialog.addEventListener('cancel', (e) => { e.preventDefault(); this.finish(false); });
     const backdrop = el('style');
     backdrop.textContent = '#rtlx::backdrop { background: rgba(0,0,0,0.55); }';
     document.head.appendChild(backdrop);
     this.title = el('div', { fontSize: '15px', fontWeight: '600', marginBottom: '4px' }, 'Workload (NASA-RTLX)');
     this.title.id = 'rtlx-title';
-    this.dialog.append(this.title, el('div', { opacity: '0.6', marginBottom: '14px' }, 'Rate the run you just finished.'));
+    // The open modal hides the page's status region, so the form says how the run ended.
+    this.result = el('span', {
+      position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'nowrap',
+    });
+    this.result.id = 'rtlx-result';
+    const prompt = el('div', { opacity: '0.6', marginBottom: '14px' }, 'Rate the run you just finished.');
+    prompt.id = 'rtlx-prompt';
+    this.dialog.append(this.title, this.result, prompt);
     for (const d of RTLX_DIMS) {
       const head = el('div', { display: 'flex', justifyContent: 'space-between', marginBottom: '3px' });
       const val = el('span', { opacity: '0.7', fontVariantNumeric: 'tabular-nums' }, '50');
@@ -71,9 +80,18 @@ export class RtlxForm {
 
   get open(): boolean { return this.dialog.open; }
 
-  /** Show the form; resolves with the scores, or null if skipped. */
-  ask(heading: string): Promise<RtlxScores | null> {
+  /** Show the form; resolves with the scores, or null if skipped. A second ask waits for the first. */
+  ask(heading: string, result = ''): Promise<RtlxScores | null> {
+    const shown = this.queue.then(() => this.show(heading, result));
+    this.queue = shown;
+    return shown;
+  }
+
+  private queue: Promise<unknown> = Promise.resolve();
+
+  private show(heading: string, result: string): Promise<RtlxScores | null> {
     this.title.textContent = `Workload (NASA-RTLX): ${heading}`;
+    this.result.textContent = result;
     for (const s of this.sliders.values()) { s.value = '50'; s.dispatchEvent(new Event('input')); }
     this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     this.dialog.showModal();

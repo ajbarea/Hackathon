@@ -27,6 +27,7 @@ export class CoursePanel {
       textAlign: 'center', fontSize: '15px', lineHeight: '1.6',
     });
     this.banner.id = 'finish-banner';
+    this.banner.setAttribute('aria-hidden', 'true'); // #finish-status reads it out
     document.body.appendChild(this.banner);
     this.status = el('div', {
       position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'nowrap',
@@ -71,7 +72,7 @@ export class CoursePanel {
         : `<div style="font-size:22px;font-weight:700;color:#ffb74d">DNF</div>time limit reached · ${res.gates_passed}/${n} gates<br>`;
       this.banner.innerHTML += `<span style="opacity:.6">Press Reset (or send action "restart") to run again</span>`;
       this.banner.style.display = 'block';
-      this.status.textContent = this.banner.textContent;
+      this.status.textContent = this.banner.innerText;
     } else if (!res && this.banner.style.display !== 'none') {
       this.banner.style.display = 'none';
       this.status.textContent = '';
