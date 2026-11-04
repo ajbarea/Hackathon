@@ -51,7 +51,7 @@ export class RtlxForm {
       head.append(labelFor(d.label, s.id, { opacity: '1' }), val);
       s.dataset.key = d.key;
       s.addEventListener('input', () => { val.textContent = s.value; });
-      const anchors = el('div', { display: 'flex', justifyContent: 'space-between', fontSize: '10px', opacity: '0.5' });
+      const anchors = el('div', { display: 'flex', justifyContent: 'space-between', fontSize: '10px', opacity: '0.75' });
       anchors.append(el('span', {}, d.lo), el('span', {}, d.hi));
       const row = el('div', { marginBottom: '12px' });
       row.append(head, s, anchors);
