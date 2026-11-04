@@ -28,7 +28,7 @@ export class Hud {
   private info: HTMLDivElement;
 
   constructor() {
-    const p = panel({ left: '12px', bottom: '12px', width: '260px' }, 'hud');
+    const p = panel({ left: '12px', bottom: '12px', width: '260px' }, 'hud', 'Robot status');
     const head = el('div', { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' });
     this.pill = el('span', { padding: '2px 10px', borderRadius: '10px', fontWeight: '700', letterSpacing: '.04em' });
     this.pill.id = 'hud-status';

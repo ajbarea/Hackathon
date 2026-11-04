@@ -11,7 +11,7 @@ export class ConnectionPanel {
   private url: HTMLInputElement;
 
   constructor(private client: BridgeClient) {
-    const p = panel({ left: '12px', top: '12px', width: '300px' }, 'connection');
+    const p = panel({ left: '12px', top: '12px', width: '300px' }, 'connection', 'Bridge connection');
     const head = el('div', { display: 'flex', alignItems: 'center', gap: '8px' });
     this.light = el('span', { width: '10px', height: '10px', borderRadius: '50%', display: 'inline-block' });
     this.light.id = 'bridge-light';

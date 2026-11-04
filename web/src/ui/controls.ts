@@ -14,7 +14,7 @@ export class Controls {
   readonly askRtlx: HTMLInputElement;
 
   constructor(sim: Sim, courses: CourseEntry[], current: string, onCourse: (id: string) => void, cams: CameraRig, log: RunLog) {
-    const p = panel({ right: '12px', bottom: '12px' }, 'controls');
+    const p = panel({ right: '12px', bottom: '12px' }, 'controls', 'Run controls');
     const row = (...kids: HTMLElement[]) => {
       const r = el('div', { display: 'flex', gap: '6px', alignItems: 'center', margin: '4px 0' });
       r.append(...kids);

@@ -9,13 +9,15 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return n;
 }
 
-export function panel(pos: Partial<CSSStyleDeclaration>, id: string): HTMLDivElement {
+export function panel(pos: Partial<CSSStyleDeclaration>, id: string, label: string): HTMLDivElement {
   const p = el('div', {
     position: 'fixed', zIndex: '10', padding: '10px 12px', borderRadius: '10px',
     background: 'rgba(20,23,28,0.82)', border: '1px solid rgba(255,255,255,0.08)',
     backdropFilter: 'blur(6px)', minWidth: '200px', userSelect: 'none', ...pos,
   });
   p.id = id;
+  p.setAttribute('role', 'region');
+  p.setAttribute('aria-label', label);
   document.body.appendChild(p);
   return p;
 }

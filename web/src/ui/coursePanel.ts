@@ -14,7 +14,7 @@ export class CoursePanel {
   private lastNext = -1;
 
   constructor(private sim: Sim, private view: SceneView) {
-    const p = panel({ left: '50%', top: '12px', transform: 'translateX(-50%)', textAlign: 'center', minWidth: '320px' }, 'course');
+    const p = panel({ left: '50%', top: '12px', transform: 'translateX(-50%)', textAlign: 'center', minWidth: '320px' }, 'course', 'Course and score');
     this.line = el('div', { fontVariantNumeric: 'tabular-nums', lineHeight: '1.5' });
     this.line.id = 'course-line';
     p.appendChild(this.line);
