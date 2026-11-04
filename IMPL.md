@@ -25,8 +25,11 @@ scratch path in `S=`, so edit that line before reuse).
   description award name; team credit (AJ published both releases; the 10-23 release holds the other
   drivers' recordings, docs/data.md said otherwise); finish result in a `role=status` region; active
   camera button underline; slider `aria-valuetext`; zensical defaults upgrade note; e2e asserts for each.
-- 📋 Unit + e2e (m2, m4 on chrome) under the heavy lock; re-audit sim at HEAD (region count for the PR
-  table); round 2 fresh reviewer; merge; check the Pages deploy.
+- ✅ Round 1 fixes measured: unit 65, chrome e2e m2+m4 8/8 (bridge venv: `uv venv` + `uv pip install -e
+  'bridge[lsl]' pygame numpy`, pass `PYTHON=`), axe 0 with the form closed and open (probe2.py).
+- ✅ Round 2 (`review-hackathon17-r2.md`, same scratch folder): A finish status hidden under the modal, B vacuous
+  pause test, nits -> fixed in the latest commit; mutant without the C guard killed by the rtlx e2e.
+- 🔄 Round 3 fresh reviewer -> `review-hackathon17-r3.md`. Then merge, check the Pages deploy.
 
 ### fleet-briefing: ✅ PR #6 merged 11-03 (round 1 + verify clean); klepsydra#306 filed (sync skips done/).
 📋 Confirm the C: checkout picks up the merged README (log line "briefing synced after a rebase").
@@ -38,9 +41,9 @@ scratch path in `S=`, so edit that line before reuse).
 - ✅ Live audit (1920, phone, dark): 0 console errors, 0 failed requests, no x-overflow; one axe
   hit per deck, `landmark-complementary-is-top-level` on reveal's `<aside class="controls">` -> fixed
   in shared/deck.js (role=group, "Slide controls"), uncommitted. Same aside in techne's web starter.
-- 📋 slides-check vs techne main (pass SLIDES= and SPHRAGIS= to exported copies; needs Playwright
-  1.63.0 Chromium, now installed); commit, issue, PR, shots, review, merge; techne issue for starter.
-  Duet deck is presented Fri 11-06: fix only gate failures and clear bugs there.
+- ✅ Issue #74, PR #77 (main merged in). Every slide at 1920 light/dark + phone view: axe 0 on all decks
+  (deck-axe.py in the scratch folder); slides-check 0 blockers; techne#276 filed (starter aside, FAQ backup).
+- 🔄 Round 2 fresh reviewer -> `review-talks77-r2.md`. Then merge, check deploy. talks Dependabot #66-68 merged.
 
 Left as is (theme or organizers' pages): axe `region` on Material's progress bar, `landmark-unique`
 on BRIEF's code nav, slide 1 image text (the deck as presented).
