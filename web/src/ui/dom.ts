@@ -35,7 +35,8 @@ export function button(label: string, onClick: () => void, color = '#2d333c'): H
     padding: '5px 10px', font: 'inherit', cursor: 'pointer',
   }, label);
   b.addEventListener('click', onClick);
-  b.addEventListener('keydown', (e) => { if (e.key === ' ') e.preventDefault(); }); // Space is "stop", not "click"
+  // Space is "stop" while driving, so it only presses buttons inside a dialog, where driving is paused.
+  b.addEventListener('keydown', (e) => { if (e.key === ' ' && !b.closest('dialog')) e.preventDefault(); });
   return b;
 }
 

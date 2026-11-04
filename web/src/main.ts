@@ -86,6 +86,7 @@ async function main(): Promise<void> {
     location.search = params.toString(); // simplest correct course switch: reload with the new course
   }, cams, log);
   // Optional workload form after each finish / DNF; answers go into that run's CSV row.
+  const nGates = course.gates?.length ?? 0;
   let asking = 0; // forms queued or open; driving stays paused until all are answered
   log.onRow(async (row) => {
     if (!controls?.askRtlx.checked) return;
@@ -93,7 +94,7 @@ async function main(): Promise<void> {
     arbiter.paused = true;
     const result = row.completed
       ? `Finished, score ${Number(row.score_time).toFixed(2)} s.`
-      : `Did not finish, ${row.gates_passed} gates passed.`;
+      : nGates > 0 ? `Did not finish, ${row.gates_passed} of ${nGates} gates.` : 'Did not finish.';
     const scores = await rtlx.ask(`run ${row.run}, ${row.course}`, result);
     arbiter.paused = --asking > 0;
     if (scores) log.setRtlx(row.run as number, scores);

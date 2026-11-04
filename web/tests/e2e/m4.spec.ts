@@ -88,7 +88,9 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
 
   expect(await (await autopilot(bridge.port)).exited).toBe(0); // the autopilot restarts the finished course
   await expect(page.locator('#rtlx')).toBeVisible();
-  await page.locator('#rtlx-skip').click();
+  await page.locator('#rtlx-skip').focus();
+  await page.keyboard.press(' ');                               // Space presses a focused button in the form
+  await expect(page.locator('#rtlx')).toBeHidden();
 
   expect(await (await autopilot(bridge.port)).exited).toBe(0);
   await expect(page.locator('#rtlx')).toBeVisible();
