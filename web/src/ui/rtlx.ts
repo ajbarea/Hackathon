@@ -59,7 +59,7 @@ export class RtlxForm {
       this.sliders.set(d.key, s);
     }
     const buttons = el('div', { display: 'flex', gap: '8px', marginTop: '8px' });
-    const submit = button('Submit', () => this.finish(true), '#2e7d32');
+    const submit = button('Submit', () => this.finish(true), '#1b5e20');
     submit.id = 'rtlx-submit';
     Object.assign(submit.style, { flex: '1', padding: '9px' });
     const skip = button('Skip', () => this.finish(false));

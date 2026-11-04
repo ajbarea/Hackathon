@@ -6,7 +6,7 @@ import type { Sim } from '../sim/sim';
 import { el, esc, panel } from './dom';
 
 const STATUS_STYLE: Record<Status, [string, string]> = {
-  ok: ['OK', '#2e7d32'], idle: ['IDLE', '#455a64'], deadman: ['DEADMAN', '#e65100'],
+  ok: ['OK', '#1b5e20'], idle: ['IDLE', '#455a64'], deadman: ['DEADMAN', '#bf360c'],
   estop: ['E-STOP', '#c62828'], finished: ['FINISHED', '#1565c0'],
 };
 
