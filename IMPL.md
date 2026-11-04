@@ -1,6 +1,6 @@
 # IMPL
 
-## Resume (2026-11-03 ~19:45, site polish, moved to a fresh session mid-review)
+## Resume (2026-11-04 early, moved back to RIT; nit fixes committed, verification not yet run)
 
 Brief: `~/.local/state/fleet-orchestrator/task-site-deslop.src` (Hackathon, then talks, then
 fleet-briefing). This branch `polish/site-deslop`, worktree `.claude/worktrees/polish`.
@@ -29,7 +29,15 @@ scratch path in `S=`, so edit that line before reuse).
   'bridge[lsl]' pygame numpy`, pass `PYTHON=`), axe 0 with the form closed and open (probe2.py).
 - ✅ Round 2 (`review-hackathon17-r2.md`, same scratch folder): A finish status hidden under the modal, B vacuous
   pause test, nits -> fixed in the latest commit; mutant without the C guard killed by the rtlx e2e.
-- 🔄 Round 3: first reviewer died at the account limit with no report (partial logs in old scratch `review-hackathon17-r3/`: m2 acceptance-7 and m4 sliders failed once under load). Fresh reviewer (11-03 late) -> `/tmp/claude-1001/-home-ajbar-ajsoftworks/96bcc1a3-8c19-4750-afbd-cb46e639030a/scratchpad/review-hackathon17-r3.md`. Then merge, check the Pages deploy.
+- ✅ Round 3 CLEAN (0 Blocking, 0 Should-fix, 3 Nits; report `/home/ajbar/.local/state/fleet-orchestrator/site-polish/review-hackathon17-r3.md`). The earlier m2/m4 failures are
+  bundled-Chromium only, on main too; Google Chrome (the repo's engine) passes 8/8 at HEAD. Possible follow-up issue: sliders test
+  fails 5/5 on bundled Chromium (W hold after canvas click never starts the run), main and HEAD alike.
+- ✅ 1bde1eb nit fixes: N12 DNF line "x of n gates" (main.ts), N13 Space presses buttons inside a dialog (dom.ts) and keys.ts
+  ignores keydown inside an open dialog but always clears held keys on keyup (also fixes a key stuck when released in a slider);
+  m4 rtlx e2e now presses Space on Skip.
+- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/fix-verify.sh` (fix the N= line to the new scratch dir first):
+  unit tests, rtlx e2e baseline must pass, then mutant (dom.ts closest check removed) must fail; log fix-verify.log. Then push,
+  fix N14 in the PR body ("after" build = 1bde1eb, e2e 8/8 Google Chrome), one fresh Opus verify pass on 1bde1eb, merge, check Pages.
 
 ### fleet-briefing: ✅ PR #6 merged 11-03 (round 1 + verify clean); klepsydra#306 filed (sync skips done/).
 ✅ C: checkout carries the PR #6 merge (checked 11-03 late).
@@ -43,7 +51,15 @@ scratch path in `S=`, so edit that line before reuse).
   in shared/deck.js (role=group, "Slide controls"), uncommitted. Same aside in techne's web starter.
 - ✅ Issue #74, PR #77 (main merged in). Every slide at 1920 light/dark + phone view: axe 0 on all decks
   (deck-axe.py in the scratch folder); slides-check 0 blockers; techne#276 filed (starter aside, FAQ backup).
-- 🔄 Round 2: first reviewer died at the limit (partial audit in old scratch `review-talks77-r2/`). Fresh reviewer -> `/tmp/claude-1001/-home-ajbar-ajsoftworks/96bcc1a3-8c19-4750-afbd-cb46e639030a/scratchpad/review-talks77-r2.md`. Then merge, check deploy. talks Dependabot #66-68 merged.
+- ✅ Round 2 (report `/home/ajbar/.local/state/fleet-orchestrator/site-polish/review-talks77-r2.md`): 0 Blocking, 1 Should-fix, 3 Nits; Duet-safe. Pushed 569a2b9: phone tabindex only when
+  nothing in .reveal .slides is focusable; two-tone focus frame (.reveal-viewport:focus-visible::after, deck.css end); `?receiver`
+  (speaker-view previews) is never phone; N3 comment.
+- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/run.sh` (fix N=/W= lines and its probe.py path; it uses
+  r2t/serve.sh and r2t/audit.py from the old scratch, copy them too): builds _site, probe.json (Duet/FA first Tab lands on a
+  figure item, Kourai on body with ::after frame, tap no frame, receiver at 428 not phone, desktop unchanged) and every-slide
+  axe audit.json must be 0. Then PR body: What-landed row for the frame + speaker previews; FA and Kourai Before = 3 rules (target
+  size came and went on all three); "slide number moves 1px"; drop the 109 count ("every link and image returns 200"); cite
+  developer.chrome.com/blog/keyboard-focusable-scrollers. Then one fresh Opus verify pass, merge, check deploy.
 
 Left as is (theme or organizers' pages): axe `region` on Material's progress bar, `landmark-unique`
 on BRIEF's code nav, slide 1 image text (the deck as presented).
