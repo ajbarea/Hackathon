@@ -1,6 +1,6 @@
 # IMPL
 
-## Resume (2026-11-04 early, moved back to RIT; nit fixes committed, verification not yet run)
+## Resume (2026-11-04 00:40, replacement session on Personal; both PRs measured, final verify passes running)
 
 Brief: `~/.local/state/fleet-orchestrator/task-site-deslop.src` (Hackathon, then talks, then
 fleet-briefing). This branch `polish/site-deslop`, worktree `.claude/worktrees/polish`.
@@ -35,9 +35,11 @@ scratch path in `S=`, so edit that line before reuse).
 - ✅ 1bde1eb nit fixes: N12 DNF line "x of n gates" (main.ts), N13 Space presses buttons inside a dialog (dom.ts) and keys.ts
   ignores keydown inside an open dialog but always clears held keys on keyup (also fixes a key stuck when released in a slider);
   m4 rtlx e2e now presses Space on Skip.
-- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/fix-verify.sh` (fix the N= line to the new scratch dir first):
-  unit tests, rtlx e2e baseline must pass, then mutant (dom.ts closest check removed) must fail; log fix-verify.log. Then push,
-  fix N14 in the PR body ("after" build = 1bde1eb, e2e 8/8 Google Chrome), one fresh Opus verify pass on 1bde1eb, merge, check Pages.
+- ✅ 1bde1eb measured 11-04: unit 65; rtlx e2e baseline passes, mutant (dom.ts closest check removed) fails; Google Chrome e2e
+  m2+m4 8/8; sim axe 0 form closed and open; after a real finish axe 0 form open and after close (reviewer r3 spec rerun).
+  PR body N14 fixed (after = 1bde1eb).
+- 📋 Verify pass (fresh Opus) running; report appends to
+  /tmp/claude-1001/-home-ajbar-ajsoftworks/8def2bee-9566-4892-8eb5-2390b263b589/scratchpad/verify-h17.md. If clean: merge, check Pages.
 
 ### fleet-briefing: ✅ PR #6 merged 11-03 (round 1 + verify clean); klepsydra#306 filed (sync skips done/).
 ✅ C: checkout carries the PR #6 merge (checked 11-03 late).
@@ -54,12 +56,11 @@ scratch path in `S=`, so edit that line before reuse).
 - ✅ Round 2 (report `/home/ajbar/.local/state/fleet-orchestrator/site-polish/review-talks77-r2.md`): 0 Blocking, 1 Should-fix, 3 Nits; Duet-safe. Pushed 569a2b9: phone tabindex only when
   nothing in .reveal .slides is focusable; two-tone focus frame (.reveal-viewport:focus-visible::after, deck.css end); `?receiver`
   (speaker-view previews) is never phone; N3 comment.
-- 📋 NEXT: run `flock -o /tmp/fleet-heavy.lock timeout 1800 /home/ajbar/.local/state/fleet-orchestrator/site-polish/run.sh` (fix N=/W= lines and its probe.py path; serve.sh and the every-slide audit.py are now in site-polish/ too;
-  note site-polish/audit.py was overwritten 11-04 by the reviewer's every-slide audit, same usage BASE OUT.json): builds _site, probe.json (Duet/FA first Tab lands on a
-  figure item, Kourai on body with ::after frame, tap no frame, receiver at 428 not phone, desktop unchanged) and every-slide
-  axe audit.json must be 0. Then PR body: What-landed row for the frame + speaker previews; FA and Kourai Before = 3 rules (target
-  size came and went on all three); "slide number moves 1px"; drop the 109 count ("every link and image returns 200"); cite
-  developer.chrome.com/blog/keyboard-focusable-scrollers. Then one fresh Opus verify pass, merge, check deploy.
+- ✅ 569a2b9 measured 11-04: probe as expected (Duet/FA Tab on a figure item, Kourai on the viewport with the frame, tap no
+  frame, receiver not phone, desktop unchanged); every-slide axe 0 on all decks, light/dark/phone; landing 0 once animations
+  settle (site-polish/audit.py reads it mid-fade; friction.md). CI check green. PR body rewritten (frame, speaker view, 3-rule
+  befores, Chrome + WebKit sources).
+- 📋 Verify pass (fresh Opus) running; report appends to the same scratch folder, verify-t77.md. If clean: merge, check deploy.
 
 Left as is (theme or organizers' pages): axe `region` on Material's progress bar, `landmark-unique`
 on BRIEF's code nav, slide 1 image text (the deck as presented).
