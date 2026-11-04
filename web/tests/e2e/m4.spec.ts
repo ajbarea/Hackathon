@@ -2,7 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page } from '@playwright/test';
 import { EXAMPLES, run, startBridge } from './bridge';
-import { test as base, expect, hold, simState } from './fixtures';
+import { test as base, expect, hold, openSim, simState } from './fixtures';
 
 type Bridge = Awaited<ReturnType<typeof startBridge>>;
 const test = base.extend<{ bridge: Bridge }>({
@@ -74,7 +74,10 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
   await expect(page.locator('#finish-status')).not.toBeEmpty();
   await expect(page.locator('#rtlx-result')).toHaveText(/^Finished, score \d+\.\d\d s\.$/);
   const x0 = (await simState(page)).pose.x;
-  await page.locator('#rtlx-skip').focus();                     // a slider would swallow the key on its own
+  // Only the pause may stop W here: focus on the page (the form ignores keys aimed inside it) and the
+  // autopilot no longer the bridge's active source (the arbiter ignores local input while it is).
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await page.locator('#bridge-light[data-state="idle"]').waitFor({ timeout: 5000 });
   await page.keyboard.down('w');                                // driving is paused while the form is open
   await page.waitForTimeout(600);
   await page.keyboard.up('w');
@@ -102,5 +105,38 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
   expect(rows[0]).toMatchObject({ rtlx: '70', rtlx_mental: '70', rtlx_performance: '70', rtlx_frustration: '70' });
   expect(rows[1]).toMatchObject({ rtlx: '', rtlx_mental: '' });
   expect(rows[2]).toMatchObject({ rtlx: '', rtlx_mental: '' });
+  void errors;
+});
+
+const drift = async (page: Page, ms: number): Promise<number> => {
+  const a = (await simState(page)).pose;
+  await page.waitForTimeout(ms);
+  const b = (await simState(page)).pose;
+  return Math.hypot(b.x - a.x, b.y - a.y);
+};
+
+base('a drive key released in a text field or the open form does not stay held', async ({ page, errors }) => {
+  await openSim(page, '?course=L0-sandbox');
+  const pressThenRelease = async (into: () => Promise<void>) => {
+    await page.locator('canvas#view').click();
+    await page.keyboard.down('w');
+    await page.waitForTimeout(400);
+    expect(await drift(page, 300)).toBeGreaterThan(0.02);        // W really drives
+    await into();
+    await page.keyboard.up('w');
+  };
+  await pressThenRelease(() => page.locator('#team-id').focus());
+  await page.locator('canvas#view').click();
+  await page.waitForTimeout(500);
+  expect(await drift(page, 800)).toBeLessThan(0.01);
+
+  await pressThenRelease(async () => {
+    void page.evaluate(() => (window as any).__rtlx.ask('release test'));
+    await expect(page.locator('#rtlx-mental')).toBeFocused();
+  });
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#rtlx')).toBeHidden();
+  await page.waitForTimeout(500);
+  expect(await drift(page, 800)).toBeLessThan(0.01);
   void errors;
 });
