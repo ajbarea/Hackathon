@@ -73,11 +73,11 @@ test('?rtlx=1: the form follows each finish; Submit fills the CSV, Skip and Esca
   await expect(page.locator('#rtlx-mental')).toBeFocused();     // a modal moves focus inside it
   await expect(page.locator('#finish-status')).not.toBeEmpty();
   await expect(page.locator('#rtlx-result')).toHaveText(/^Finished, score \d+\.\d\d s\.$/);
-  const x0 = (await simState(page)).pose.x;
   // Only the pause may stop W here: focus on the page (the form ignores keys aimed inside it) and the
   // autopilot no longer the bridge's active source (the arbiter ignores local input while it is).
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   await page.locator('#bridge-light[data-state="idle"]').waitFor({ timeout: 5000 });
+  const x0 = (await simState(page)).pose.x;                   // after the finish has settled
   await page.keyboard.down('w');                                // driving is paused while the form is open
   await page.waitForTimeout(600);
   await page.keyboard.up('w');
