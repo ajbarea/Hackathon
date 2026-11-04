@@ -29,10 +29,10 @@ scratch path in `S=`, so edit that line before reuse).
   'bridge[lsl]' pygame numpy`, pass `PYTHON=`), axe 0 with the form closed and open (probe2.py).
 - ✅ Round 2 (`review-hackathon17-r2.md`, same scratch folder): A finish status hidden under the modal, B vacuous
   pause test, nits -> fixed in the latest commit; mutant without the C guard killed by the rtlx e2e.
-- 🔄 Round 3 fresh reviewer -> `review-hackathon17-r3.md`. Then merge, check the Pages deploy.
+- 🔄 Round 3: first reviewer died at the account limit with no report (partial logs in old scratch `review-hackathon17-r3/`: m2 acceptance-7 and m4 sliders failed once under load). Fresh reviewer (11-03 late) -> `/tmp/claude-1001/-home-ajbar-ajsoftworks/96bcc1a3-8c19-4750-afbd-cb46e639030a/scratchpad/review-hackathon17-r3.md`. Then merge, check the Pages deploy.
 
 ### fleet-briefing: ✅ PR #6 merged 11-03 (round 1 + verify clean); klepsydra#306 filed (sync skips done/).
-📋 Confirm the C: checkout picks up the merged README (log line "briefing synced after a rebase").
+✅ C: checkout carries the PR #6 merge (checked 11-03 late).
 
 ### talks: worktree ~/ajsoftworks/talks/.claude/worktrees/polish, branch polish/site-deslop
 - ✅ 109 links and assets on the site return 200. Glossary grep: one fix (FA deck "neither ...
@@ -43,7 +43,7 @@ scratch path in `S=`, so edit that line before reuse).
   in shared/deck.js (role=group, "Slide controls"), uncommitted. Same aside in techne's web starter.
 - ✅ Issue #74, PR #77 (main merged in). Every slide at 1920 light/dark + phone view: axe 0 on all decks
   (deck-axe.py in the scratch folder); slides-check 0 blockers; techne#276 filed (starter aside, FAQ backup).
-- 🔄 Round 2 fresh reviewer -> `review-talks77-r2.md`. Then merge, check deploy. talks Dependabot #66-68 merged.
+- 🔄 Round 2: first reviewer died at the limit (partial audit in old scratch `review-talks77-r2/`). Fresh reviewer -> `/tmp/claude-1001/-home-ajbar-ajsoftworks/96bcc1a3-8c19-4750-afbd-cb46e639030a/scratchpad/review-talks77-r2.md`. Then merge, check deploy. talks Dependabot #66-68 merged.
 
 Left as is (theme or organizers' pages): axe `region` on Material's progress bar, `landmark-unique`
 on BRIEF's code nav, slide 1 image text (the deck as presented).
