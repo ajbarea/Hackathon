@@ -1,6 +1,6 @@
 # IMPL
 
-## Resume (2026-11-04, moving accounts; Hackathon #17 S1 fix committed, unmeasured)
+## Resume (2026-11-04, Personal; Hackathon #17 S1 fix measured, final verify running)
 
 Brief: `~/.local/state/fleet-orchestrator/task-site-deslop.src` (Hackathon, then talks, then
 fleet-briefing). This branch `polish/site-deslop`, worktree `.claude/worktrees/polish`.
@@ -26,12 +26,14 @@ scratch path in `S=`, so edit that line before reuse).
     release test kills its mutant only by racing the box at x=2.5 (with +0.4 s latency the robot is
     pinned and the `dlg` mutant survives). Mutant `dlg`: keys.ts:22 ->
     `if (!down && !inDialog(e)) held[k] = false;`.
-  - 🔄 S1 fix committed, NOT yet measured: each case clicks Reset, drives with S (reverse, ~4.7 m of
-    open floor at y=0), and `drift()` asserts x > -3.6 at window start. tsc clean.
-  - 📋 Next: under `flock -o /tmp/fleet-heavy.lock timeout 1200`, from git-archive copies (Google
-    Chrome, mut17/run.sh shape): base m4 green; `dlg` mutant and release mutant (keys.ts:22 removed)
-    both fail at the form window; `dlg` also with +400/+800 ms before keyup. Then one fresh Opus verify
-    pass (diff + S1), then squash-merge #17, check Pages (site, /deck/, /sim/), close #16, report to Heph.
+  - ✅ aa83abc fixes S1: each case clicks Reset, drives with S (reverse, ~4.7 m of open floor at y=0),
+    and `drift()` asserts x > -3.6 at window start.
+  - ✅ aa83abc measured 11-04 (harness and logs in the 918d417d scratch, mut18/): unit 65; m4 e2e 4/4
+    on Google Chrome; `dlg` and release mutants fail at +0/+400/+800 ms before keyup (drift 0.96 m);
+    the unmutated test passes with +800 ms.
+  - 📋 Verify pass on aa83abc (fresh Opus), report appends to
+    `/tmp/claude-1001/-home-ajbar-ajsoftworks/918d417d-fee9-4cf6-9409-22d12e445b98/scratchpad/verify-h17-r3.md`.
+    If clean: squash-merge #17, check Pages (site, /deck/, /sim/), close #16, report to Heph.
 
 ### Left as is
 Theme or organizers' pages: axe `region` on Material's progress bar, `landmark-unique` on BRIEF's
