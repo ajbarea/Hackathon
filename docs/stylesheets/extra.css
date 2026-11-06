@@ -151,14 +151,8 @@
   line-height: 1.2;
 }
 
-/* Drive page: the Myo photo and the five arm poses. The poses are inline SVG drawn in
+/* Drive page: the five arm poses. The poses are inline SVG drawn in
    currentColor and the accent token, so they follow the color scheme. */
-.myo-photo img {
-  border-radius: 0.5rem;
-  max-width: 28rem;
-  width: 100%;
-  height: auto;
-}
 
 .pose-grid {
   display: grid;
