@@ -32,15 +32,6 @@ Next time, the same command skips straight to driving. Recalibrate whenever the 
 
 ## How you drive
 
-<figure class="myo-photo" markdown>
-![A black Myo armband worn on a bare forearm just below the elbow: eight sensor pods joined in a ring, the logo pod on top](assets/myo-on-forearm.jpg){ width="960" height="720" loading="lazy" }
-<figcaption>A Myo on the thickest part of the forearm: its motion sensor reads the arm's angle, its eight
-muscle (EMG) sensors the fist. Photo: <a href="https://www.flickr.com/photos/azugaldia/12660932383/">Trying the @thalmic Myo armband</a>
-by <a href="https://www.flickr.com/people/23526149@N00">Antonio Zugaldia</a>,
-<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>, resized, via
-<a href="https://commons.wikimedia.org/wiki/File:Trying_the_@thalmic_Myo_armband,_can%27t_wait_to_experiment_with_it._Hat_tip_@juano2310_(12660932383).jpg">Wikimedia Commons</a>.</figcaption>
-</figure>
-
 Your forearm is a lever pivoting at the elbow (blue: the band):
 
 <div class="pose-grid">
